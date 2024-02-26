@@ -1,0 +1,1178 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_HYDROLIX_- POSTNL_GROUP_IT",
+      "label": "Hydrolix - PostNL_Group_IT",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "grafana-clickhouse-datasource",
+      "pluginName": "ClickHouse"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.1.1"
+    },
+    {
+      "type": "datasource",
+      "id": "grafana-clickhouse-datasource",
+      "name": "ClickHouse",
+      "version": "3.2.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "gnetId": 18453,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Number of request group by HTTP Status Code",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "elkjop",
+            "fields": [],
+            "filters": [],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "elkjop",
+              "fields": [],
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT toString(statusCode) as HTTP_Status_Code, $__timeInterval(reqTimeSec) as time, count(*) as http\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${errorCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nGROUP BY HTTP_Status_Code, time ORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - 4xxresp - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "4xx resp. over time",
+      "transformations": [
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "many"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "403's per attack group over time.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": -1,
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 3600000,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": 3600000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "elkjop",
+            "fields": [],
+            "filters": [],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "elkjop",
+              "fields": [],
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "/*\nShow attacks per group over time, ignoring any 403's generated by the Origin.\nA LEFT JOIN so any 403 without a SIEM entry but with errorcode recorded as blocked by CDN\n*/\nSELECT if(isNull(tag),'CDN', tag) as rule, $__timeInterval(reqTimeSec) AS time, count(*) attack_group\nFROM (\n\tSELECT reqId as ID, reqTimeSec\n\tFROM ${database}.logs\n\tWHERE $__timeFilter(reqTimeSec)\n  AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n\tAND statusCode = '403'\n\tAND isNotNull(errorCode) \n) l LEFT JOIN (\n\tSELECT requestId AS ID, indexOf(ruleActions, 'deny') AS index, ruleTags[index] AS tag\n\tFROM ${database}.siem\n  WHERE $__timeFilter(timestamp)\n  AND hasAny(ruleActions,['deny'])\n\tAND $__conditionalAll( host IN (${reqHost:sqlstring}), $host)\n) r USING (ID)\nGROUP BY rule, time\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - 403s - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "403's resp. per attack group",
+      "transformations": [
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "many"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Show the 403's generated by either the CDN configuration or security layer. This doesn't include and \"bot\" related mitigations like tarpit, slow etc.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "requestId"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 85
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "attack_group"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 230
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "denied_by"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 175
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Client"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 157
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reqHost"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 209
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 19,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "time"
+          }
+        ]
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "/*\nNot every 403 is generated by the WAF, can be generated by the delivery config or origin which don't trigger a SIEM event.\nSo using LEFT JOIN to also get 403's without a SIEM entry but we need to create some 'dummy' CDN/Origin warnings.\nBut if blocked by the origin there is no errorCode.\n*/\nSELECT ID as requestId, time, cliIP as Client, reqHost, reqPath,\nif(isNull(errorCode), 'Origin', splitByChar('|', assumeNotNull(errorCode))[2]) as denied_by,\n/*\nIf there is no SIEM entry, tag and message will be null. If there is no SIEM entry it's created by the delivery config.\n*/\nif(denied_by = 'Origin', 'ORIGIN', if(isNull(tag),'CDN', tag)) AS rules,\nif(denied_by = 'Origin', 'Blocked by Origin', if(isNull(message),'Blocked by delivery configuration', message)) AS messages\nFROM (\n\tSELECT reqId as ID, errorCode, cliIP, reqHost, reqPath, reqTimeSec as time\n\tFROM ${database}.logs\n\tWHERE $__timeFilter(reqTimeSec)\n\tAND statusCode = '403'\n\tAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n\t/*\n\tif you're not interested in origin genereted 403's uncomment the isNotNull.\n\t--AND isNotNull(errorCode) \n\t*/\n) l LEFT JOIN (\n\t/* \n\tWe're only interested in the deny messages, no need to show any \"monitoring/alert\" events.\n\tLet's get the index of the first deny action and corresponding ruleMessage and ruleTag using the same index.\n\tMake sure to use the __timefilter otherwise you will see timeouts!\n\t*/\n\tSELECT requestId AS ID, indexOf(ruleActions, 'deny') AS index, ruleMessages[index] AS message, ruleTags[index] AS tag\n\tFROM ${database}.siem\n\tWHERE $__timeFilter(timestamp)\n\tAND $__conditionalAll( host IN (${reqHost:sqlstring}), $host)\n\t-- For now only filtering on deny, this might be extended with some specific bot rules later.\n\tAND hasAny(ruleActions,['deny'])\n) r USING (ID)\nORDER BY time DESC\nLIMIT 1000\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - error - ${__user.login}'\n",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "403's per rule over time",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Check the objects that are still being requested but don't exist anymore. Maybe inform the backend team to do some cleanup. ;-)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count()"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reqPath"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filter",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqPath=${__data.fields.reqPath:percentencode}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "WITH (\n        SELECT topK(50)(reqPath)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND statusCode = '404'\n        AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n    ) AS top_50_reqPath\nSELECT\n    count(),\n    reqPath,\n    sum(bytes) as total_bytes,\n    round(avg(bytes)) as avg_bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_reqPath, reqPath)\nGROUP BY reqPath\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Top 50 404's per reqpath",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "avg_bytes": "avg. bytes per request",
+              "total_bytes": "total bytes delivered"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count()"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reqPath"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filter",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqPath=${__data.fields.reqPath:percentencode}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 18
+      },
+      "id": 18,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT\n    count(),\n    reqHost\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${errorCode:sqlstring}), $statusCode)\nGROUP BY reqHost\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "HTTP 4xx response codes per host",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Cache Hit Ratio :\nsum of all request with cacheStatus: 1 / divided by total count of request",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 26
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "elkjop",
+            "fields": [],
+            "filters": [],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "elkjop",
+              "fields": [],
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT\n        time, cache_hit \n    FROM\n        ( SELECT\n            $__timeInterval(reqTimeSec) as time,\n            sumIf(cacheStatus, 1) as \"cached\",\n            cached/count() * 100 as \"cache_hit\" \n        FROM\n            ${table} \n        WHERE\n            $__timeFilter(reqTimeSec) \n            AND $__conditionalAll( statusCode IN (${errorCode:sqlstring}), $statusCode)\n            AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n        GROUP BY time \n        ORDER BY time) \n        SETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - cachehit - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Cache Hit Ratio",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Sum of Total Bytes Delivered",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "super-light-purple",
+            "mode": "fixed",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-blue"
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 26
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "elkjop",
+            "fields": [],
+            "filters": [],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "elkjop",
+              "fields": [],
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT $__timeInterval(reqTimeSec) as time,\nsum(totalBytes) as Bytes_Delivered\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${errorCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nGROUP BY time ORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - bytes - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Bytes Delivered",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "",
+  "revision": 1,
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+        },
+        "definition": "SELECT\n    reqHost\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${errorCode:sqlstring}), $statusCode)\nGROUP BY reqHost\nORDER BY reqHost\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Host",
+        "multi": true,
+        "name": "reqHost",
+        "options": [],
+        "query": "SELECT\n    reqHost\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${errorCode:sqlstring}), $statusCode)\nGROUP BY reqHost\nORDER BY reqHost\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+        },
+        "definition": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "table",
+        "options": [],
+        "query": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "description": "Real redirects, ignoring special redirections 300 and 304.",
+        "hide": 2,
+        "includeAll": false,
+        "label": "Error Code",
+        "multi": false,
+        "name": "errorCode",
+        "options": [
+          {
+            "selected": true,
+            "text": "400",
+            "value": "400"
+          },
+          {
+            "selected": false,
+            "text": "401",
+            "value": "401"
+          },
+          {
+            "selected": false,
+            "text": "402",
+            "value": "402"
+          },
+          {
+            "selected": false,
+            "text": "403",
+            "value": "403"
+          },
+          {
+            "selected": false,
+            "text": "404",
+            "value": "404"
+          },
+          {
+            "selected": false,
+            "text": "405",
+            "value": "405"
+          },
+          {
+            "selected": false,
+            "text": "406",
+            "value": "406"
+          },
+          {
+            "selected": false,
+            "text": "407",
+            "value": "407"
+          },
+          {
+            "selected": false,
+            "text": "408",
+            "value": "408"
+          },
+          {
+            "selected": false,
+            "text": "409",
+            "value": "409"
+          },
+          {
+            "selected": false,
+            "text": "410",
+            "value": "410"
+          },
+          {
+            "selected": false,
+            "text": "411",
+            "value": "411"
+          },
+          {
+            "selected": false,
+            "text": "412",
+            "value": "412"
+          },
+          {
+            "selected": false,
+            "text": "413",
+            "value": "413"
+          },
+          {
+            "selected": false,
+            "text": "414",
+            "value": "414"
+          },
+          {
+            "selected": false,
+            "text": "415",
+            "value": "415"
+          },
+          {
+            "selected": false,
+            "text": "416",
+            "value": "416"
+          },
+          {
+            "selected": false,
+            "text": "417",
+            "value": "417"
+          },
+          {
+            "selected": false,
+            "text": "418",
+            "value": "418"
+          },
+          {
+            "selected": false,
+            "text": "419",
+            "value": "419"
+          },
+          {
+            "selected": false,
+            "text": "421",
+            "value": "421"
+          },
+          {
+            "selected": false,
+            "text": "422",
+            "value": "422"
+          },
+          {
+            "selected": false,
+            "text": "423",
+            "value": "423"
+          },
+          {
+            "selected": false,
+            "text": "424",
+            "value": "424"
+          },
+          {
+            "selected": false,
+            "text": "425",
+            "value": "425"
+          },
+          {
+            "selected": false,
+            "text": "426",
+            "value": "426"
+          },
+          {
+            "selected": false,
+            "text": "428",
+            "value": "428"
+          },
+          {
+            "selected": false,
+            "text": "429",
+            "value": "429"
+          },
+          {
+            "selected": false,
+            "text": "431",
+            "value": "431"
+          },
+          {
+            "selected": false,
+            "text": "451",
+            "value": "451"
+          }
+        ],
+        "query": "400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,421,422,423,424,425,426,428,429,431,451",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+        },
+        "definition": "SELECT name FROM system.databases",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "database",
+        "options": [],
+        "query": "SELECT name FROM system.databases",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now-1m"
+  },
+  "timepicker": {
+    "hidden": false,
+    "nowDelay": "1m"
+  },
+  "timezone": "",
+  "title": "Akamai Client errors",
+  "uid": "c9ff0bae-e4ed-417f-9c2b-a1540069abb6",
+  "version": 57,
+  "weekStart": ""
+}
