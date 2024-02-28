@@ -441,6 +441,13 @@
         "y": 10
       },
       "id": 19,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+        }
+      ],
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -992,6 +999,13 @@
         "y": 34
       },
       "id": 5,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+        }
+      ],
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -1041,6 +1055,112 @@
           }
         }
       ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- customer}"
+      },
+      "description": "Top 10 clientIP's generating most 4xx responses",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count()"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reqPath"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filter",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqPath=${__data.fields.reqPath:percentencode}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 34
+      },
+      "id": 22,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- customer}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT\n    count(),\n    cliIP\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND statusCode = '404'\nGROUP BY cliIP\nORDER BY count() DESC\nLIMIT 10\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - error_per_client - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "HTTP 404 response codes per clientIP",
       "type": "table"
     }
   ],
@@ -1327,7 +1447,7 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-24h",
     "to": "now-1m"
   },
   "timepicker": {
@@ -1337,6 +1457,6 @@
   "timezone": "",
   "title": "Akamai Client errors",
   "uid": "c9ff0bae-e4ed-417f-9c2b-a1540069abb6",
-  "version": 70,
+  "version": 72,
   "weekStart": ""
 }
