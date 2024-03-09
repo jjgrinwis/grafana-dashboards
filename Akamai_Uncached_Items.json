@@ -78,7 +78,7 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "${DS_HYDROLIX_- customer}"
       },
-      "description": "Number of page hits per hostname over a period of time with variable interval time",
+      "description": "Number of hits on objects that could potentially be cached. They have a cacheStatus of 0 but are not part of certain content types and are hit more than once.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -87,23 +87,23 @@
           "custom": {
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
+            "axisLabel": "Hits",
+            "axisPlacement": "left",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 30,
-            "gradientMode": "opacity",
+            "fillOpacity": 10,
+            "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineStyle": {
               "fill": "solid"
             },
-            "lineWidth": 1,
+            "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
@@ -130,7 +130,43 @@
           },
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalBytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.scaleDistribution",
+                "value": {
+                  "log": 2,
+                  "type": "log"
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "Bytes"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 14,
@@ -138,14 +174,11 @@
         "x": 0,
         "y": 0
       },
-      "id": 3,
+      "id": 6,
       "options": {
         "legend": {
           "calcs": [
-            "sum",
-            "max",
-            "mean",
-            "stdDev"
+            "sum"
           ],
           "displayMode": "table",
           "placement": "bottom",
@@ -155,9 +188,10 @@
         },
         "tooltip": {
           "mode": "single",
-          "sort": "none"
+          "sort": "asc"
         }
       },
+      "pluginVersion": "10.1.1",
       "targets": [
         {
           "builderOptions": {
@@ -186,12 +220,12 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "SELECT $__timeInterval(reqTimeSec) as time, count(*) as hits, reqHost as host\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType IN (${content_type})\nAND statusCode = 200\nGROUP BY host, time ORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - 4xxresp - ${__user.login}'",
+          "rawSql": "/*\nUsing a Common Table Expressions (CTA) (WITH) to first to limit on the number of hosts.\nSo let's calculate to total over the select timefilter and use the found hosts in other where statement\n\nWe also need to use REPLACE to cleanup hosts to use :443 as reqHost\n*/\nWITH most_active_hosts AS \n(\n\tSELECT REPLACE(reqHost, ':443', '') as host, SUM(rspContentLen) as totalBytes\n\tFROM ${table}\n\tWHERE $__timeFilter(reqTimeSec)\n\tAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n  AND rspContentType NOT IN (${content_type})\n\tAND statusCode = 200\n\tAND cacheStatus = 0\n\tAND reqHost IS NOT NULL\n\tGROUP BY host\n\tORDER BY totalBytes DESC\n\tLIMIT ${limit}\n)\nSELECT $__timeInterval(reqTimeSec) as time, count(*) as hits, REPLACE(reqHost, ':443', '') as host, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nAND reqHost IN (SELECT host FROM most_active_hosts)\nGROUP BY host, time \nHAVING hits > 1\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - uncached objects - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
       ],
-      "title": "200 resp. over time with interval ${__interval} for period or period: ${__from:date:YYYY-MM-DD-HH-mm} - ${__to:date:YYYY-MM-DD-HH-mm} with content types ${content_type}",
+      "title": "200 resp. over time for uncached items with interval of $__interval for period: ${__from:date:YYYY-MM-DD-HH-mm} - ${__to:date:YYYY-MM-DD-HH-mm} for NON content types ${content_type}",
       "transformations": [
         {
           "id": "prepareTimeSeries",
@@ -207,6 +241,7 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "${DS_HYDROLIX_- customer}"
       },
+      "description": "Cache misses for files that can be potentially be cached.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -250,7 +285,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "hosts"
+              "options": "host"
             },
             "properties": [
               {
@@ -263,103 +298,37 @@
                 ]
               }
             ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 14
-      },
-      "id": 4,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true
-      },
-      "pluginVersion": "10.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- customer}"
           },
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "fields": [],
-              "limit": 100,
-              "mode": "list"
-            }
-          },
-          "queryType": "sql",
-          "rawSql": "SELECT count() as hits, reqHost as hosts\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType IN (${content_type})\nAND statusCode = 200\nGROUP BY hosts\nORDER BY hits DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
-          "refId": "A",
-          "selectedFormat": 4
-        }
-      ],
-      "title": "Total hits per hostname for period: ${__from:date:YYYY-MM-DD-HH-mm} - ${__to:date:YYYY-MM-DD-HH-mm}",
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_HYDROLIX_- customer}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
           {
             "matcher": {
               "id": "byName",
-              "options": "hits"
+              "options": "host"
             },
             "properties": [
               {
                 "id": "custom.width",
-                "value": 80
+                "value": 178
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalBytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
+        "h": 10,
+        "w": 24,
+        "x": 0,
         "y": 14
       },
       "id": 5,
@@ -373,7 +342,8 @@
           ],
           "show": false
         },
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "10.1.1",
       "targets": [
@@ -391,12 +361,12 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "SELECT count() as hits, reqPath as path\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType IN (${content_type})\nAND statusCode = 200\nGROUP BY path\nORDER BY hits DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+          "rawSql": "/*\nLet's lookup files that have a cacheStatus of 0.\nThese files could potentially be cached but are not. If there is more than 1 hit on a file it should be cached.\n*/\nSELECT reqHost as host, reqPath as path, count(*) as hits, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nGROUP BY host, path\nHAVING hits > 1\nORDER BY hits DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
       ],
-      "title": "Total hits per path for period: ${__from:date:YYYY-MM-DD-HH-mm} - ${__to:date:YYYY-MM-DD-HH-mm}",
+      "title": "Total Cache Misses for period: ${__from:date:YYYY-MM-DD-HH-mm} - ${__to:date:YYYY-MM-DD-HH-mm}",
       "type": "table"
     }
   ],
@@ -465,11 +435,34 @@
             "selected": false
           }
         ]
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "3",
+          "value": "3"
+        },
+        "description": "limit the number of hosts for our cache misses visualization.",
+        "hide": 2,
+        "includeAll": false,
+        "label": "limit",
+        "multi": false,
+        "name": "limit",
+        "options": [
+          {
+            "selected": true,
+            "text": "3",
+            "value": "3"
+          }
+        ],
+        "query": "3",
+        "skipUrlSync": false,
+        "type": "custom"
       }
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-2d",
     "to": "now-1m"
   },
   "timepicker": {
@@ -477,8 +470,8 @@
     "nowDelay": "1m"
   },
   "timezone": "",
-  "title": "Akamai Page Hits",
-  "uid": "e3643bd7-029a-4bfa-8ea3-c36e02a50df5",
-  "version": 10,
+  "title": "Akamai Uncached hits",
+  "uid": "d9d39440-4021-4ff2-ad6f-33f8e0dd73ab",
+  "version": 18,
   "weekStart": ""
 }

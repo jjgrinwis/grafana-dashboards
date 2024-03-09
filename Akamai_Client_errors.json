@@ -25,6 +25,12 @@
     },
     {
       "type": "panel",
+      "id": "logs",
+      "name": "Logs",
+      "version": ""
+    },
+    {
+      "type": "panel",
       "id": "table",
       "name": "Table",
       "version": ""
@@ -182,7 +188,7 @@
           "selectedFormat": 4
         }
       ],
-      "title": "4xx resp. over time",
+      "title": "4xx resp. over time per $__interval",
       "transformations": [
         {
           "id": "prepareTimeSeries",
@@ -360,6 +366,15 @@
               {
                 "id": "custom.width",
                 "value": 85
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-requestId=${__data.fields.requestId}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
               }
             ]
           },
@@ -417,6 +432,15 @@
               {
                 "id": "custom.width",
                 "value": 150
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqHost=${__data.fields.reqHost}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
               }
             ]
           },
@@ -588,7 +612,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "SELECT\n    count(),\n    reqHost\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${errorCode:sqlstring}), $statusCode)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${clientIP:sqlstring}), $clientIP)\nGROUP BY reqHost\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+          "rawSql": "SELECT\n    count(),\n    reqHost\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${errorCode:sqlstring}), $statusCode)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${clientIP:sqlstring}), $clientIP)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nGROUP BY reqHost\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
@@ -641,7 +665,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "reqPath"
+              "options": "cliIP"
             },
             "properties": [
               {
@@ -649,7 +673,7 @@
                 "value": [
                   {
                     "title": "Filter",
-                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqPath=${__data.fields.reqPath:percentencode}&${__all_variables}&${__url_time_range}"
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-clientIP=${__data.fields.cliIP}&${__all_variables}&${__url_time_range}"
                   }
                 ]
               }
@@ -694,7 +718,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "SELECT\n    count(),\n    cliIP\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${errorCode:sqlstring}), $statusCode)\nGROUP BY cliIP\nORDER BY count() DESC\nLIMIT 10\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - error_per_client - ${__user.login}'",
+          "rawSql": "SELECT\n    count(),\n    cliIP\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${errorCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nGROUP BY cliIP\nORDER BY count() DESC\nLIMIT 10\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - error_per_client - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
@@ -976,17 +1000,33 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "reqPath"
+              "options": "reqHost"
             },
             "properties": [
               {
                 "id": "links",
                 "value": [
                   {
-                    "title": "Filter",
-                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqPath=${__data.fields.reqPath:percentencode}&${__all_variables}&${__url_time_range}"
+                    "title": "",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqHost=${__data.fields.reqHost}&${__all_variables}&${__url_time_range}"
                   }
                 ]
+              },
+              {
+                "id": "custom.width",
+                "value": 163
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reqPath"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 419
               }
             ]
           }
@@ -994,7 +1034,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 18,
         "x": 0,
         "y": 34
       },
@@ -1036,7 +1076,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "WITH (\n        SELECT topK(50)(reqPath)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND statusCode = '404'\n        AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n        AND $__conditionalAll(cliIP ${AND_cliIP} (${clientIP:sqlstring}), $clientIP)\n    ) AS top_50_reqPath\nSELECT\n    count(),\n    reqPath,\n    sum(bytes) as total_bytes,\n    round(avg(bytes)) as avg_bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_reqPath, reqPath)\nGROUP BY reqPath\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+          "rawSql": "WITH (\n        SELECT topK(50)(reqPath)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND statusCode = '404'\n        AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n        AND $__conditionalAll(cliIP ${AND_cliIP} (${clientIP:sqlstring}), $clientIP)\n    ) AS top_50_reqPath\nSELECT\n    count(),\n    reqPath,\n    reqHost,\n    sum(bytes) as total_bytes,\n    round(avg(bytes)) as avg_bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_reqPath, reqPath)\nGROUP BY reqPath, reqHost\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
@@ -1115,13 +1155,30 @@
                 ]
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cliIP"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-clientIP=${__data.fields.cliIP}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
+        "w": 6,
+        "x": 18,
         "y": 34
       },
       "id": 22,
@@ -1155,13 +1212,120 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "SELECT\n    count(),\n    cliIP\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND statusCode = '404'\nGROUP BY cliIP\nORDER BY count() DESC\nLIMIT 10\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - error_per_client - ${__user.login}'",
+          "rawSql": "SELECT\n    count(),\n    cliIP\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND statusCode = '404'\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nGROUP BY cliIP\nORDER BY count() DESC\nLIMIT 10\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - error_per_client - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
       ],
       "title": "HTTP 404 response codes per clientIP",
       "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 42
+      },
+      "id": 24,
+      "panels": [],
+      "title": "Raw Logs",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- customer}"
+      },
+      "description": "DataStream Edge Access logs",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 43
+      },
+      "id": 25,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- customer}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "/*\nsome issues with OSS version of grafana so converting Map(String, Nullable(String)) to strings\n*/\nSELECT reqId::String,\n    toString(unknown) as unknown, \n\t\t*\n\t\tEXCEPT unknown\nFROM ${database}.logs\nWHERE $__timeFilter(reqTimeSec)\n--AND requestId = '67d24c3e'\nAND $__conditionalAll(reqId IN (${requestId:sqlstring}), $requestId)\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Edge access logs",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- customer}"
+      },
+      "description": "Raw data for the different SIEM entries",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 43
+      },
+      "id": 26,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- customer}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "/*\nsome issues with OSS version of grafana so converting Map(String, Nullable(String)) to strings\n*/\nSELECT requestId::String,\n    toString(botData) as botData,\n\t\ttoString(clientData) as clientData,\n\t\ttoString(requestHeaders) as requestHeaders,\n\t\ttoString(responseHeaders) as responseHeaders,\n\t\ttoString(userRiskData) as userRiskData, \n\t\t*\n\t\tEXCEPT (botData, clientData, requestHeaders, responseHeaders, userRiskData)\nFROM ${database}.siem\nWHERE $__timeFilter(timestamp)\n--AND requestId = '67d24c3e'\nAND $__conditionalAll(requestId IN (${requestId:sqlstring}), $requestId)\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "SIEM entries",
+      "type": "logs"
     }
   ],
   "refresh": "",
@@ -1441,13 +1605,34 @@
           }
         ],
         "query": "include : IN, exclude : NOT IN\n",
+        "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "null",
+          "value": "null"
+        },
+        "hide": 0,
+        "label": "requestId",
+        "name": "requestId",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
       }
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-30d",
     "to": "now-1m"
   },
   "timepicker": {
@@ -1457,6 +1642,6 @@
   "timezone": "",
   "title": "Akamai Client errors",
   "uid": "c9ff0bae-e4ed-417f-9c2b-a1540069abb6",
-  "version": 72,
+  "version": 121,
   "weekStart": ""
 }
