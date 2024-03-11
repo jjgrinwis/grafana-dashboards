@@ -611,148 +611,6 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "${DS_HYDROLIX_- customer}"
       },
-      "description": "Check the objects that are still being requested but don't exist anymore. Maybe inform the backend team to do some cleanup. ;-)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "hits"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 83
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "reqHost"
-            },
-            "properties": [
-              {
-                "id": "links",
-                "value": [
-                  {
-                    "title": "",
-                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqHost=${__data.fields.reqHost}&${__all_variables}&${__url_time_range}"
-                  }
-                ]
-              },
-              {
-                "id": "custom.width",
-                "value": 163
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "reqPath"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 523
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 28
-      },
-      "id": 22,
-      "links": [
-        {
-          "targetBlank": true,
-          "title": "",
-          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
-        }
-      ],
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true,
-        "sortBy": []
-      },
-      "pluginVersion": "10.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- customer}"
-          },
-          "expand": true,
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "fields": [],
-              "limit": 100,
-              "mode": "list"
-            }
-          },
-          "queryType": "sql",
-          "rawSql": "WITH (\n        SELECT topK(50)(reqPath)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND statusCode = '404'\n        AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n    ) AS top_50_reqPath\nSELECT\n    count() as hits,\n    reqPath,\n    reqHost,\n    sum(bytes) as total_bytes,\n    round(avg(bytes)) as avg_bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_reqPath, reqPath)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND statusCode = '404'\nGROUP BY reqPath, reqHost\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
-          "refId": "A",
-          "selectedFormat": 4
-        }
-      ],
-      "title": "Top 50 404's per reqpath",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {},
-            "indexByName": {},
-            "renameByName": {
-              "avg_bytes": "avg. bytes per request",
-              "total_bytes": "total bytes delivered"
-            }
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_HYDROLIX_- customer}"
-      },
       "description": "Sum of Total Bytes Delivered",
       "fieldConfig": {
         "defaults": {
@@ -800,7 +658,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-blue"
+                "color": "light-blue",
+                "value": null
               }
             ]
           },
@@ -812,7 +671,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 28
       },
       "id": 17,
       "options": {
@@ -932,7 +791,7 @@
     ]
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-6h",
     "to": "now-1m"
   },
   "timepicker": {
@@ -942,6 +801,6 @@
   "timezone": "",
   "title": "Akamai Not Found",
   "uid": "d86436f6-f2fe-4b31-b53f-d3abab877544",
-  "version": 11,
+  "version": 16,
   "weekStart": ""
 }
