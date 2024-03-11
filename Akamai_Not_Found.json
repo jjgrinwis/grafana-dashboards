@@ -298,7 +298,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "/*\nSelecting objects responding with a 404 and checking the sum of the object lenght being served for these 404's.\nGrouping them based on extenion or / if no extension exists.\n*/\nSELECT if(like(splitByChar('.', assumeNotNull(reqPath))[-1] AS ext, '%/%'), '/', ext) AS extension, count() as hits, sum(rspContentLen) as Bytes_Delivered\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND reqPath IS NOT NULL\nAND statusCode = 404\nGROUP BY extension\nORDER BY hits DESC\nLIMIT 5\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - top-404-ext - ${__user.login}'",
+          "rawSql": "/*\nSelecting objects responding with a 404 and checking the sum of the object lenght being served for these 404's.\nGrouping them based on extenion or / if no extension exists.\n*/\nSELECT if(like(splitByChar('.', assumeNotNull(reqPath))[-1] AS ext, '%/%'), '/', ext) AS extension, count() as hits, sum(rspContentLen) as Bytes_Delivered\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND reqPath IS NOT NULL\nAND statusCode = 404\nGROUP BY extension\nORDER BY hits DESC\nLIMIT 10\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - top-404-ext - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 1
         }
@@ -431,6 +431,18 @@
               ]
             }
           }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Bytes_Delivered"
+              }
+            ]
+          }
         }
       ],
       "type": "barchart"
@@ -549,7 +561,12 @@
           "show": false
         },
         "showHeader": true,
-        "sortBy": []
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "total bytes delivered"
+          }
+        ]
       },
       "pluginVersion": "10.1.1",
       "targets": [
@@ -860,14 +877,14 @@
           "type": "grafana-clickhouse-datasource",
           "uid": "${DS_HYDROLIX_- customer}"
         },
-        "definition": "SELECT\n    reqHost\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND statusCode = 404\nGROUP BY reqHost\nORDER BY reqHost\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - 403hosts - ${__user.login}'",
+        "definition": "SELECT\nreplaceRegexpOne(lcase(reqHost), ':\\d*$', '')\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND statusCode = 404\nGROUP BY reqHost\nORDER BY reqHost\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - 403hosts - ${__user.login}'",
         "hide": 0,
         "includeAll": true,
         "label": "Host",
         "multi": true,
         "name": "reqHost",
         "options": [],
-        "query": "SELECT\n    reqHost\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND statusCode = 404\nGROUP BY reqHost\nORDER BY reqHost\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - 403hosts - ${__user.login}'",
+        "query": "SELECT\nreplaceRegexpOne(lcase(reqHost), ':\\d*$', '')\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND statusCode = 404\nGROUP BY reqHost\nORDER BY reqHost\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - 403hosts - ${__user.login}'",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -911,33 +928,6 @@
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": "include",
-          "value": "IN"
-        },
-        "hide": 1,
-        "includeAll": false,
-        "multi": false,
-        "name": "AND_cliIP",
-        "options": [
-          {
-            "selected": true,
-            "text": "include",
-            "value": "IN"
-          },
-          {
-            "selected": false,
-            "text": "exclude : NOT IN",
-            "value": "exclude : NOT IN"
-          }
-        ],
-        "query": "include : IN, exclude : NOT IN\n",
-        "queryValue": "",
-        "skipUrlSync": false,
-        "type": "custom"
       }
     ]
   },
@@ -952,6 +942,6 @@
   "timezone": "",
   "title": "Akamai Not Found",
   "uid": "d86436f6-f2fe-4b31-b53f-d3abab877544",
-  "version": 14,
+  "version": 11,
   "weekStart": ""
 }
