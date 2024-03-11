@@ -190,7 +190,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "SELECT $__timeInterval(reqTimeSec) as time, count(*) as hits, reqHost as host\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND statusCode = 404\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nGROUP BY time, host\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - 404resp - ${__user.login}'",
+          "rawSql": "/*\nSometimes you will see :443 in the reqHost, just clean that up using replace.\nUsing replaceRegexpOne in stead of REPLACE this time.\n*/\nSELECT $__timeInterval(reqTimeSec) as time, count(*) as hits, replaceRegexpOne(lcase(reqHost), ':443', '') as host\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND statusCode = 404\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nGROUP BY time, host\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - 404resp - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
@@ -298,7 +298,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "SELECT if(like(splitByChar('.', assumeNotNull(reqPath))[-1] AS ext, '%/%'), '/', ext) AS extension, count() as hits, sum(totalBytes) as Bytes_Delivered\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND reqPath IS NOT NULL\nAND statusCode = 404\nGROUP BY extension\nORDER BY hits DESC\nLIMIT 5\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - top-404-ext - ${__user.login}'",
+          "rawSql": "/*\nSelecting objects responding with a 404 and checking the sum of the object lenght being served for these 404's.\nGrouping them based on extenion or / if no extension exists.\n*/\nSELECT if(like(splitByChar('.', assumeNotNull(reqPath))[-1] AS ext, '%/%'), '/', ext) AS extension, count() as hits, sum(rspContentLen) as Bytes_Delivered\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND reqPath IS NOT NULL\nAND statusCode = 404\nGROUP BY extension\nORDER BY hits DESC\nLIMIT 5\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - top-404-ext - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 1
         }
@@ -568,7 +568,149 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "WITH (\n        SELECT topK(50)(reqPath)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND statusCode = '404'\n        AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n    ) AS top_50_reqPath\nSELECT\n    count() as hits,\n    reqPath,\n    reqHost,\n    sum(bytes) as total_bytes,\n    round(avg(bytes)) as avg_bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_reqPath, reqPath)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nGROUP BY reqPath, reqHost\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+          "rawSql": "WITH (\n        SELECT topK(50)(reqPath)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND statusCode = '404'\n        AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n    ) AS top_50_reqPath\nSELECT\n    count() as hits,\n    reqPath,\n    reqHost,\n    sum(bytes) as total_bytes,\n    round(avg(bytes)) as avg_bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_reqPath, reqPath)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND statusCode = '404'\nGROUP BY reqPath, reqHost\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Top 50 404's per reqpath",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "avg_bytes": "avg. bytes per request",
+              "total_bytes": "total bytes delivered"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- customer}"
+      },
+      "description": "Check the objects that are still being requested but don't exist anymore. Maybe inform the backend team to do some cleanup. ;-)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hits"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reqHost"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqHost=${__data.fields.reqHost}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 163
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reqPath"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 523
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 22,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+        }
+      ],
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- customer}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "WITH (\n        SELECT topK(50)(reqPath)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND statusCode = '404'\n        AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n    ) AS top_50_reqPath\nSELECT\n    count() as hits,\n    reqPath,\n    reqHost,\n    sum(bytes) as total_bytes,\n    round(avg(bytes)) as avg_bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_reqPath, reqPath)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND statusCode = '404'\nGROUP BY reqPath, reqHost\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
@@ -641,8 +783,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-blue",
-                "value": null
+                "color": "light-blue"
               }
             ]
           },
@@ -654,7 +795,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 36
       },
       "id": 17,
       "options": {
@@ -801,7 +942,7 @@
     ]
   },
   "time": {
-    "from": "now-2d",
+    "from": "now-7d",
     "to": "now-1m"
   },
   "timepicker": {
@@ -811,6 +952,6 @@
   "timezone": "",
   "title": "Akamai Not Found",
   "uid": "d86436f6-f2fe-4b31-b53f-d3abab877544",
-  "version": 11,
+  "version": 14,
   "weekStart": ""
 }
