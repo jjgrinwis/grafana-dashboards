@@ -31,12 +31,6 @@
     },
     {
       "type": "panel",
-      "id": "news",
-      "name": "News",
-      "version": ""
-    },
-    {
-      "type": "panel",
       "id": "timeseries",
       "name": "Time series",
       "version": ""
@@ -65,103 +59,6 @@
   "links": [],
   "liveNow": false,
   "panels": [
-    {
-      "datasource": {
-        "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_HYDROLIX_- customer}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-RdYlGr"
-          },
-          "links": [
-            {
-              "targetBlank": true,
-              "title": "${__data.fields.http_group} info",
-              "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/${__data.fields.http_group}"
-            }
-          ],
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 5
-              },
-              {
-                "color": "blue",
-                "value": 15
-              },
-              {
-                "color": "light-green",
-                "value": 25
-              },
-              {
-                "color": "yellow",
-                "value": 50
-              },
-              {
-                "color": "orange",
-                "value": 75
-              },
-              {
-                "color": "red",
-                "value": 90
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 6,
-        "x": 0,
-        "y": 0
-      },
-      "id": 6,
-      "links": [
-        {
-          "targetBlank": true,
-          "title": "",
-          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#redirection_messages"
-        }
-      ],
-      "options": {
-        "labelFields": [],
-        "tiling": "treemapBinary"
-      },
-      "pluginVersion": "10.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- customer}"
-          },
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "fields": [],
-              "limit": 100,
-              "mode": "list"
-            }
-          },
-          "queryType": "sql",
-          "rawSql": "-- convert statusCode results to string otherwise we have two counters.\nSELECT toString(statusCode) as http_group, count(*) as total\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND statusCode BETWEEN 299 AND 399\nGROUP BY http_group\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - httpcodes - ${__user.login}'",
-          "refId": "A",
-          "selectedFormat": 1
-        }
-      ],
-      "title": "Redirection messages (300's)",
-      "type": "marcusolsson-treemap-panel"
-    },
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
@@ -267,8 +164,8 @@
       },
       "gridPos": {
         "h": 11,
-        "w": 18,
-        "x": 6,
+        "w": 24,
+        "x": 0,
         "y": 0
       },
       "id": 2,
@@ -330,7 +227,7 @@
             {
               "targetBlank": true,
               "title": "${__data.fields.http_group} info",
-              "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/${__data.fields.http_group}\n"
+              "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/${__data.fields.http_group}"
             }
           ],
           "mappings": [],
@@ -373,16 +270,16 @@
       },
       "gridPos": {
         "h": 11,
-        "w": 6,
+        "w": 8,
         "x": 0,
         "y": 11
       },
-      "id": 5,
+      "id": 6,
       "links": [
         {
           "targetBlank": true,
           "title": "",
-          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses"
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#redirection_messages"
         }
       ],
       "options": {
@@ -405,41 +302,13 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "-- convert statusCode results to string otherwise we have two counters.\nSELECT toString(statusCode) as http_group, count(*) as total\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND statusCode BETWEEN 399 AND 499\nGROUP BY http_group\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - httpcodes_client_error - ${__user.login}'",
+          "rawSql": "-- convert statusCode results to string otherwise we have two counters.\nSELECT toString(statusCode) as http_group, count(*) as total\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND statusCode BETWEEN 299 AND 399\nGROUP BY http_group\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - httpcodes - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 1
         }
       ],
-      "title": "Client error messages (400's)",
+      "title": "Redirection messages (300's)",
       "type": "marcusolsson-treemap-panel"
-    },
-    {
-      "datasource": {
-        "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_HYDROLIX_- customer}"
-      },
-      "gridPos": {
-        "h": 21,
-        "w": 18,
-        "x": 6,
-        "y": 11
-      },
-      "id": 1,
-      "options": {
-        "feedUrl": "https://www.akamaistatus.com/history.rss",
-        "showImage": true
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- customer}"
-          },
-          "refId": "A"
-        }
-      ],
-      "title": "Akamai status news feed",
-      "type": "news"
     },
     {
       "datasource": {
@@ -498,9 +367,106 @@
       },
       "gridPos": {
         "h": 11,
-        "w": 6,
-        "x": 0,
-        "y": 22
+        "w": 8,
+        "x": 8,
+        "y": 11
+      },
+      "id": 5,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses"
+        }
+      ],
+      "options": {
+        "labelFields": [],
+        "tiling": "treemapBinary"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- customer}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "-- convert statusCode results to string otherwise we have two counters.\nSELECT toString(statusCode) as http_group, count(*) as total\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND statusCode BETWEEN 399 AND 499\nGROUP BY http_group\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - httpcodes_client_error - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 1
+        }
+      ],
+      "title": "Client error messages (400's)",
+      "type": "marcusolsson-treemap-panel"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- customer}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__data.fields.http_group} info",
+              "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/${__data.fields.http_group}\n"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 5
+              },
+              {
+                "color": "blue",
+                "value": 15
+              },
+              {
+                "color": "light-green",
+                "value": 25
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "orange",
+                "value": 75
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 8,
+        "x": 16,
+        "y": 11
       },
       "id": 4,
       "links": [
@@ -595,6 +561,6 @@
   "timezone": "",
   "title": "HTTP Response groups",
   "uid": "bdbb6e02-b7b3-4d14-99bc-3eaf79bff989",
-  "version": 46,
+  "version": 47,
   "weekStart": ""
 }
