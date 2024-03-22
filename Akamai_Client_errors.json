@@ -1989,8 +1989,8 @@
     ]
   },
   "time": {
-    "from": "2024-03-22T04:13:54.571Z",
-    "to": "2024-03-22T05:24:37.961Z"
+    "from": "2024-03-16T00:02:19.523Z",
+    "to": "2024-03-17T07:04:38.285Z"
   },
   "timepicker": {
     "hidden": false,
@@ -1999,6 +1999,6 @@
   "timezone": "",
   "title": "Akamai Client errors",
   "uid": "ef230733-3497-4380-b09a-c822348b3455",
-  "version": 21,
+  "version": 22,
   "weekStart": ""
 }
