@@ -1,7 +1,7 @@
 {
   "__inputs": [
     {
-      "name": "DS_HYDROLIX_- SCALEMATES_COM",
+      "name": "DS_HYDROLIX_- customer",
       "label": "Hydrolix - customer",
       "description": "",
       "type": "datasource",
@@ -74,7 +74,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+        "uid": "${DS_HYDROLIX_- customer}"
       },
       "fieldConfig": {
         "defaults": {
@@ -207,7 +207,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+            "uid": "${DS_HYDROLIX_- customer}"
           },
           "expand": true,
           "format": 0,
@@ -455,7 +455,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+        "uid": "${DS_HYDROLIX_- customer}"
       },
       "fieldConfig": {
         "defaults": {
@@ -482,7 +482,8 @@
               "options": {
                 "mode": "exclude",
                 "names": [
-                  "total"
+                  "total",
+                  "www.scalemates.com%20%7cping$%7bifs%7d-c2$%7bifs%7d724b4d41014c043097-yikqwdh3l2hsylsxyyv0vnk6jxpwdl.oastify.com"
                 ],
                 "prefix": "All except:",
                 "readOnly": true
@@ -538,7 +539,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+            "uid": "${DS_HYDROLIX_- customer}"
           },
           "format": 1,
           "meta": {
@@ -549,7 +550,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "SELECT lcase(splitByChar(':', assumeNotNull(reqHost))[1]) AS reqHost, count(*) as total\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND notEmpty(reqHost) \nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nGROUP BY reqHost\nORDER BY total DESC\nLIMIT 5\n",
+          "rawSql": "/*\nlet's do some regex to cleanup hostnames as we have seen some weird combinations.\n*/\nSELECT lcase(splitByRegexp('\\.$|:\\d+|%20|\\/', assumeNotNull(reqHost))[1]) AS reqHost, count(*) as total\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND notEmpty(reqHost) \nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nGROUP BY reqHost\nORDER BY total DESC\nLIMIT 5\n",
           "refId": "A",
           "selectedFormat": 4
         }
@@ -561,7 +562,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+        "uid": "${DS_HYDROLIX_- customer}"
       },
       "fieldConfig": {
         "defaults": {
@@ -636,7 +637,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+            "uid": "${DS_HYDROLIX_- customer}"
           },
           "format": 1,
           "meta": {
@@ -658,7 +659,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+        "uid": "${DS_HYDROLIX_- customer}"
       },
       "fieldConfig": {
         "defaults": {
@@ -733,7 +734,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+            "uid": "${DS_HYDROLIX_- customer}"
           },
           "format": 1,
           "meta": {
@@ -755,7 +756,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+        "uid": "${DS_HYDROLIX_- customer}"
       },
       "fieldConfig": {
         "defaults": {
@@ -830,7 +831,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+            "uid": "${DS_HYDROLIX_- customer}"
           },
           "format": 1,
           "meta": {
@@ -860,7 +861,7 @@
         "current": {},
         "datasource": {
           "type": "grafana-clickhouse-datasource",
-          "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+          "uid": "${DS_HYDROLIX_- customer}"
         },
         "definition": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
         "hide": 2,
@@ -880,7 +881,7 @@
         "current": {},
         "datasource": {
           "type": "grafana-clickhouse-datasource",
-          "uid": "${DS_HYDROLIX_- SCALEMATES_COM}"
+          "uid": "${DS_HYDROLIX_- customer}"
         },
         "definition": "SELECT\n    lcase(splitByChar(':', assumeNotNull(reqHost))[1])\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND notEmpty(reqHost) \nGROUP BY reqHost\nORDER BY reqHost\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - hosts - ${__user.login}'",
         "hide": 0,
@@ -906,6 +907,6 @@
   "timezone": "",
   "title": "HTTP Response groups",
   "uid": "bdbb6e02-b7b3-4d14-99bc-3eaf79bff989",
-  "version": 5,
+  "version": 6,
   "weekStart": ""
 }
