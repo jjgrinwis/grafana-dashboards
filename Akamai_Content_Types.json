@@ -87,7 +87,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-YlBl"
+            "fixedColor": "semi-dark-blue",
+            "mode": "continuous-BlYlRd"
           },
           "links": [
             {
@@ -297,12 +298,12 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "${DS_HYDROLIX_- customer}"
       },
-      "description": "Filtering all request for objects where a 404 is returned and grouping them based on extension. If there is no extension using /",
+      "description": "Get the bytes per image type over time. Using CUBE to automatically calculated the total per interval.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "super-light-yellow",
-            "mode": "fixed"
+            "fixedColor": "super-light-blue",
+            "mode": "shades"
           },
           "custom": {
             "axisCenteredZero": false,
@@ -311,8 +312,8 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 35,
-            "gradientMode": "hue",
+            "fillOpacity": 40,
+            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -320,6 +321,9 @@
             },
             "insertNulls": false,
             "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -347,7 +351,20 @@
           },
           "unit": "decbytes"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/bytes$/"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "total image bytes"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 10,
@@ -359,9 +376,11 @@
       "options": {
         "legend": {
           "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Name",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -384,13 +403,20 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "\nSELECT $__timeInterval(reqTimeSec) as time, sum(rspContentLen) as Bytes_Delivered\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType IS NOT NULL\nAND rspContentType LIKE 'image/%'\nGROUP BY time\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - image - ${__user.login}'",
+          "rawSql": "\nSELECT  $__timeInterval(reqTimeSec) as time, splitByChar('/',assumeNotNull(rspContentType))[2] as contentType, sum(rspContentLen) as bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType LIKE 'image/%'\nGROUP BY time, contentType WITH CUBE\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - image - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 1
         }
       ],
       "title": "Image bytes delivered over time per $__interval",
-      "transformations": [],
+      "transformations": [
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "multi"
+          }
+        }
+      ],
       "type": "timeseries"
     },
     {
@@ -402,7 +428,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-BlYlRd"
+            "fixedColor": "super-light-green",
+            "mode": "continuous-YlBl"
           },
           "mappings": [],
           "thresholds": {
@@ -634,7 +661,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 956
+                "value": 942
               }
             ]
           },
@@ -710,7 +737,7 @@
       "type": "table"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
@@ -778,8 +805,8 @@
       {
         "current": {
           "selected": false,
-          "text": "image",
-          "value": "image"
+          "text": "application/javascript",
+          "value": "application/javascript"
         },
         "hide": 2,
         "includeAll": false,
@@ -788,12 +815,12 @@
         "name": "content",
         "options": [
           {
-            "selected": false,
-            "text": "application/javascript",
-            "value": "application/javascript"
+            "selected": true,
+            "text": "image",
+            "value": "image"
           }
         ],
-        "query": "application/javascript",
+        "query": "image",
         "skipUrlSync": false,
         "type": "custom"
       }
@@ -810,6 +837,6 @@
   "timezone": "",
   "title": "Akamai Content Type",
   "uid": "a9af7fe6-109a-424f-a767-a1bccd3e6dbe",
-  "version": 42,
+  "version": 61,
   "weekStart": ""
 }
