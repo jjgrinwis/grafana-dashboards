@@ -359,7 +359,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "/*\nLet's lookup files that have a cacheStatus of 0.\nThese files could potentially be cached but are not. If there is more than 1 hit on a file it should be cached.\n*/\nSELECT reqHost as host, reqPath as path, count(*) as hits, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nGROUP BY host, path\nHAVING hits > 1\nORDER BY hits DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
+          "rawSql": "/*\nLet's lookup files that have a cacheStatus of 0.\nThese files could potentially be cached but are not. If there is more than 1 hit on a file it should be cached.\n*/\nSELECT reqHost as host, reqPath as path, count(*) as hits, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nGROUP BY host, path\nHAVING hits > 1\nORDER BY hits DESC\nLIMIT 100\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
@@ -495,6 +495,6 @@
   "timezone": "",
   "title": "Akamai Uncached hits",
   "uid": "d9d39440-4021-4ff2-ad6f-33f8e0dd73ab",
-  "version": 30,
+  "version": 3,
   "weekStart": ""
 }
