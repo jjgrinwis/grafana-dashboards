@@ -260,7 +260,21 @@
             },
             "inspect": false
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "index": 1,
+                  "text": "False"
+                },
+                "1": {
+                  "index": 0,
+                  "text": "True"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -320,6 +334,30 @@
                 "value": "decbytes"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "path"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 737
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cacheable"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 87
+              }
+            ]
           }
         ]
       },
@@ -359,7 +397,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "/*\nLet's lookup files that have a cacheStatus of 0.\nThese files could potentially be cached but are not. If there is more than 1 hit on a file it should be cached.\n*/\nSELECT reqHost as host, reqPath as path, count(*) as hits, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nGROUP BY host, path\nHAVING hits > 1\nORDER BY hits DESC\nLIMIT 100\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
+          "rawSql": "/*\nLet's lookup files that have a cacheStatus of 0.\n*/\nSELECT reqHost as host, reqPath as path, cacheable, count(*) as hits, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nGROUP BY host, path, cacheable\nHAVING hits > 1\nORDER BY hits DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
@@ -385,7 +423,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# Akamai Caching\n\nThere can be objects that are *potentially* cacheable but have a cacheStatus=0. \nThis might be done on purpose, a Vary header stopping Akamai from caching the object, or just some configuration/caching setup problem.\n\n**Cache is king** 👑, so try to cache as much as possible.\n\n* [Learn about Akamai's caching](https://techdocs.akamai.com/property-mgr/docs/know-caching)\n* [Caching behavior](https://techdocs.akamai.com/property-mgr/docs/caching-2)\n* [Vary header](https://techdocs.akamai.com/property-mgr/docs/rm-vary-header#how-it-works)\n* [Cache Prefresh/Refresh](https://techdocs.akamai.com/property-mgr/docs/cache-prefresh-refresh)\n\n",
+        "content": "# Akamai Caching\n\nThere can be objects that are *potentially* cacheable but have a cacheStatus=0. \nThis might be done on purpose, a TTL that's too short, a Vary header stopping Akamai from caching the object, or just some configuration/caching setup problem.\n\n**Cache is king** 👑, so try to cache as much as possible.\n\n* [Learn about Akamai's caching](https://techdocs.akamai.com/property-mgr/docs/know-caching)\n* [Caching behavior](https://techdocs.akamai.com/property-mgr/docs/caching-2)\n* [Vary header](https://techdocs.akamai.com/property-mgr/docs/rm-vary-header#how-it-works)\n* [Cache Prefresh/Refresh](https://techdocs.akamai.com/property-mgr/docs/cache-prefresh-refresh)\n\n",
         "mode": "markdown"
       },
       "pluginVersion": "10.1.1",
@@ -495,6 +533,6 @@
   "timezone": "",
   "title": "Akamai Uncached hits",
   "uid": "d9d39440-4021-4ff2-ad6f-33f8e0dd73ab",
-  "version": 3,
+  "version": 7,
   "weekStart": ""
 }
