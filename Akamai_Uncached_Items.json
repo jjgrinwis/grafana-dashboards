@@ -423,7 +423,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# Akamai Caching\n\nThere can be objects that are *potentially* cacheable but have a cacheStatus=0. \nThis might be done on purpose, a TTL that's too short, a Vary header stopping Akamai from caching the object, or just some configuration/caching setup problem.\n\n**Cache is king** 👑, so try to cache as much as possible.\n\n* [Learn about Akamai's caching](https://techdocs.akamai.com/property-mgr/docs/know-caching)\n* [Caching behavior](https://techdocs.akamai.com/property-mgr/docs/caching-2)\n* [Vary header](https://techdocs.akamai.com/property-mgr/docs/rm-vary-header#how-it-works)\n* [Cache Prefresh/Refresh](https://techdocs.akamai.com/property-mgr/docs/cache-prefresh-refresh)\n\n",
+        "content": "# Akamai Caching\n\nThere can be objects that are *potentially* cacheable but have a cacheStatus=0.\nThis might be done on purpose, a Vary header stopping Akamai from caching the object, or just some configuration/caching setup problem.\n\n*With cacheStatus=0 an object might be served from a parent server. We need [breadcrumbs](https://techdocs.akamai.com/property-mgr/docs/breadcrumbs-amd) data \nto detect if object was served from origin[c=o] or parent|peer|wrapper[c=c|p|w].*\n\n**Cache is king** 👑, so try to cache as much as possible.\n\n* [Learn about Akamai's caching](https://techdocs.akamai.com/property-mgr/docs/know-caching)\n* [Caching behavior](https://techdocs.akamai.com/property-mgr/docs/caching-2)\n* [Vary header](https://techdocs.akamai.com/property-mgr/docs/rm-vary-header#how-it-works)\n* [Cache Prefresh/Refresh](https://techdocs.akamai.com/property-mgr/docs/cache-prefresh-refresh)\n",
         "mode": "markdown"
       },
       "pluginVersion": "10.1.1",
@@ -533,6 +533,6 @@
   "timezone": "",
   "title": "Akamai Uncached hits",
   "uid": "d9d39440-4021-4ff2-ad6f-33f8e0dd73ab",
-  "version": 7,
+  "version": 31,
   "weekStart": ""
 }
