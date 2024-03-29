@@ -397,7 +397,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "/*\nLet's lookup files that have a cacheStatus of 0.\n*/\nSELECT reqHost as host, reqPath as path, cacheable, count(*) as hits, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nGROUP BY host, path, cacheable\nHAVING hits > 1\nORDER BY hits DESC\nLIMIT 50\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
+          "rawSql": "/*\nLet's lookup files that have a cacheStatus of 0.\n*/\nSELECT reqHost as host, reqPath as path, cacheable, count(*) as hits, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nGROUP BY host, path, cacheable\nHAVING hits > 1\nORDER BY hits DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
@@ -423,12 +423,197 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# Akamai Caching\n\nThere can be objects that are *potentially* cacheable but have a cacheStatus=0.\nThis might be done on purpose, a Vary header stopping Akamai from caching the object, or just some configuration/caching setup problem.\n\n*With cacheStatus=0 an object might be served from a parent server. We need [breadcrumbs](https://techdocs.akamai.com/property-mgr/docs/breadcrumbs-amd) data \nto detect if object was served from origin[c=o] or parent|peer|wrapper[c=c|p|w].*\n\n**Cache is king** 👑, so try to cache as much as possible.\n\n* [Learn about Akamai's caching](https://techdocs.akamai.com/property-mgr/docs/know-caching)\n* [Caching behavior](https://techdocs.akamai.com/property-mgr/docs/caching-2)\n* [Vary header](https://techdocs.akamai.com/property-mgr/docs/rm-vary-header#how-it-works)\n* [Cache Prefresh/Refresh](https://techdocs.akamai.com/property-mgr/docs/cache-prefresh-refresh)\n",
+        "content": "# Akamai Caching\n\nThere can be objects that are *potentially* cacheable but have a cacheStatus=0. \nThis might be done on purpose, a TTL that's too short, a Vary header stopping Akamai from caching the object, or just some configuration/caching setup problem.\n\n**Cache is king** 👑, so try to cache as much as possible.\n\n* [Learn about Akamai's caching](https://techdocs.akamai.com/property-mgr/docs/know-caching)\n* [Caching behavior](https://techdocs.akamai.com/property-mgr/docs/caching-2)\n* [Vary header](https://techdocs.akamai.com/property-mgr/docs/rm-vary-header#how-it-works)\n* [Cache Prefresh/Refresh](https://techdocs.akamai.com/property-mgr/docs/cache-prefresh-refresh)\n\n",
         "mode": "markdown"
       },
       "pluginVersion": "10.1.1",
       "title": "Caching info",
       "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- customer}"
+      },
+      "description": "If cacheStatus=0 it's not directly served from the Edge but might be served from Peer, Parent or Origin. We need breadcrumbs data otherwise we can't found out how served it.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "index": 1,
+                  "text": "False"
+                },
+                "1": {
+                  "index": 0,
+                  "text": "True"
+                },
+                "c": {
+                  "index": 4,
+                  "text": "Peer"
+                },
+                "o": {
+                  "index": 2,
+                  "text": "Origin"
+                },
+                "p": {
+                  "index": 3,
+                  "text": "Parent"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hits"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "host"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqHost=${__data.fields.host}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 190
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalBytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              },
+              {
+                "id": "custom.width",
+                "value": 127
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "path"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 737
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cacheable"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 87
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
+      "id": 8,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "path"
+          }
+        ]
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- customer}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "/*\n*/\nSELECT reqHost as host, reqPath as path, cacheable, count(*) as hits, SUM(rspContentLen) as totalBytes, extract(splitByString('],[', assumeNotNull(breadcrumbs))[-1],'c=(\\w)') AS location\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nAND notEmpty(breadcrumbs)\nGROUP BY host, path, cacheable, location\nHAVING hits > 1\nORDER BY hits DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Breadcrumb test showing location object was retrieved from",
+      "transformations": [],
+      "type": "table"
     }
   ],
   "refresh": "",
@@ -523,7 +708,7 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-6h",
     "to": "now-1m"
   },
   "timepicker": {
@@ -533,6 +718,6 @@
   "timezone": "",
   "title": "Akamai Uncached hits",
   "uid": "d9d39440-4021-4ff2-ad6f-33f8e0dd73ab",
-  "version": 7,
+  "version": 33,
   "weekStart": ""
 }
