@@ -440,7 +440,7 @@
           "selectedFormat": 4
         }
       ],
-      "title": "top 1000 files which are not fetched directly from the Edge.",
+      "title": "Top 1000 files which are fetched from Origin",
       "transformations": [],
       "type": "table"
     },
@@ -747,7 +747,7 @@
     ]
   },
   "time": {
-    "from": "now-2d",
+    "from": "now-12h",
     "to": "now-1m"
   },
   "timepicker": {
@@ -757,6 +757,6 @@
   "timezone": "",
   "title": "Akamai Uncached hits",
   "uid": "d9d39440-4021-4ff2-ad6f-33f8e0dd73ab",
-  "version": 36,
+  "version": 27,
   "weekStart": ""
 }
