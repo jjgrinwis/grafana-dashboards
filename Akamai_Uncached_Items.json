@@ -84,7 +84,7 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "${DS_HYDROLIX_- customer}"
       },
-      "description": "Number of hits on objects that could potentially be cached. They have a cacheStatus of 0 but are not part of certain content types and are hit more than once. ",
+      "description": "Number of hits on objects that could potentially be cached. They have a cacheStatus=0 but a 0 can also be served from peer, parent or cloudwrapper. So checking if Origin_IP is set so we know it's served from origin. This will only work if cloudwrapper is enabled!",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -226,12 +226,12 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "/*\nUsing a Common Table Expressions (CTA) (WITH) to first to limit on the number of hosts.\nSo let's calculate to total over the select timefilter and use the found hosts in other where statement\n\nWe also need to use REPLACE to cleanup hosts to use :443 as reqHost\n*/\nWITH most_active_hosts AS \n(\n\tSELECT REPLACE(reqHost, ':443', '') as host, SUM(rspContentLen) as totalBytes\n\tFROM ${table}\n\tWHERE $__timeFilter(reqTimeSec)\n\tAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n  AND rspContentType NOT IN (${content_type})\n\tAND statusCode = 200\n\tAND cacheStatus = 0\n\tAND reqHost IS NOT NULL\n\tGROUP BY host\n\tORDER BY totalBytes DESC\n\tLIMIT ${limit}\n)\nSELECT $__timeInterval(reqTimeSec) as time, count(*) as hits, REPLACE(reqHost, ':443', '') as host, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nAND reqHost IN (SELECT host FROM most_active_hosts)\nGROUP BY host, time \nHAVING hits > 1\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - uncached objects - ${__user.login}'",
+          "rawSql": "/*\nUsing a Common Table Expressions (CTA) (WITH) to first to limit on the number of hosts.\nSo let's calculate to total over the select timefilter and use the found hosts in other where statement\n\nWe also need to use REPLACE to cleanup hosts to use :443 as reqHost\n*/\nWITH most_active_hosts AS \n(\n\tSELECT REPLACE(reqHost, ':443', '') as host, SUM(rspContentLen) as totalBytes\n\tFROM ${table}\n\tWHERE $__timeFilter(reqTimeSec)\n\tAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n  AND rspContentType NOT IN (${content_type})\n\tAND statusCode = 200\n\tAND cacheStatus = 0\n\tAND reqHost IS NOT NULL\n\tGROUP BY host\n\tORDER BY totalBytes DESC\n\tLIMIT ${limit}\n)\nSELECT $__timeInterval(reqTimeSec) as time, count(*) as hits, REPLACE(reqHost, ':443', '') as host, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\n/*\n If we have breadcrumb data, let's check if it's served from the origin.\n But if breadcrumbs is empty, we can't tell if peer, parent, wrapper or origin is serving it so just add it.\n*/\nAND if(notEmpty(breadcrumbs), isNotNull(Origin_IP), TRUE)\nAND reqHost IN (SELECT host FROM most_active_hosts)\nGROUP BY host, time \nHAVING hits > 1\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - uncached objects - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
       ],
-      "title": "200 resp. over time for uncached items with interval of $__interval for period: ${__from:date:YYYY-MM-DD-HH-mm} - ${__to:date:YYYY-MM-DD-HH-mm} for content types NOT being ${content_type}",
+      "title": "200 resp. over time for items served from origin with interval of $__interval for period: ${__from:date:YYYY-MM-DD-HH-mm} - ${__to:date:YYYY-MM-DD-HH-mm} for content types NOT being ${content_type}",
       "transformations": [
         {
           "id": "prepareTimeSeries",
@@ -247,7 +247,7 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "${DS_HYDROLIX_- customer}"
       },
-      "description": "Cache misses for files that can be potentially be cached.",
+      "description": "If we have breadcrumb data, the Hydrolix Transformer should fill in the Origin_IP field.\nSo if cacheStatus=0 and we have an Origin_IP, object is fetched from origin location.\n\nIt looks like the transformer is ignoring the downloadTime field from network performance data\n https://techdocs.akamai.com/datastream2/docs/data-set-parameters#network-performance-data \n If it's part of the datastream output it's stored in the 'unknown' column (map). This might change in the future when Trafficpeak team is putting this in a separate column.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -264,12 +264,25 @@
             {
               "options": {
                 "0": {
+                  "color": "dark-red",
                   "index": 1,
                   "text": "False"
                 },
                 "1": {
                   "index": 0,
                   "text": "True"
+                },
+                "c": {
+                  "index": 4,
+                  "text": "Peer"
+                },
+                "o": {
+                  "index": 2,
+                  "text": "Origin"
+                },
+                "p": {
+                  "index": 3,
+                  "text": "Parent"
                 }
               },
               "type": "value"
@@ -298,7 +311,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 80
+                "value": 63
               }
             ]
           },
@@ -319,7 +332,7 @@
               },
               {
                 "id": "custom.width",
-                "value": 190
+                "value": 146
               }
             ]
           },
@@ -332,6 +345,10 @@
               {
                 "id": "unit",
                 "value": "decbytes"
+              },
+              {
+                "id": "custom.width",
+                "value": 87
               }
             ]
           },
@@ -343,7 +360,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 737
+                "value": 665
               }
             ]
           },
@@ -358,16 +375,32 @@
                 "value": 87
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "medianDownloadTime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              },
+              {
+                "id": "custom.width",
+                "value": 115
+              }
+            ]
           }
         ]
       },
       "gridPos": {
-        "h": 9,
+        "h": 11,
         "w": 16,
         "x": 0,
         "y": 16
       },
-      "id": 5,
+      "id": 9,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -379,7 +412,12 @@
           "show": false
         },
         "showHeader": true,
-        "sortBy": []
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "hits"
+          }
+        ]
       },
       "pluginVersion": "10.1.1",
       "targets": [
@@ -397,12 +435,13 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "/*\nLet's lookup files that have a cacheStatus of 0.\n*/\nSELECT reqHost as host, reqPath as path, cacheable, count(*) as hits, SUM(rspContentLen) as totalBytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nGROUP BY host, path, cacheable\nHAVING hits > 1\nORDER BY hits DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
+          "rawSql": "/*\n If we have breadcrumb data, the Hydrolix Transformer should fill in the Origin_IP field.\n So if cacheStatus=0 and we have an Origin_IP, object is fetched from origin location.\n Looks like the transformer is ignoring the downloadTime field from network performance data\n https://techdocs.akamai.com/datastream2/docs/data-set-parameters#network-performance-data \n If it's part of the datastream output it's stored in the 'unknown' column (map)\n*/\nSELECT reqHost as host, reqPath as path, cacheable, count(*) as hits, SUM(rspContentLen) as totalBytes, round(median(toInt16(unknown['downloadTime'])),1) as medianDownloadTime\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\n/*\n If we have breadcrumb data, let's check if it's served from the origin.\n But if breadcrumbs is empty, we can't tell if peer, parent, wrapper or origin is serving it so just add it.\n*/\nAND if(notEmpty(breadcrumbs), isNotNull(Origin_IP), TRUE)\nGROUP BY host, path, cacheable\nHAVING hits > 1\nORDER BY hits DESC\nLIMIT 1000\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
       ],
-      "title": "Total Cache Misses for period: ${__from:date:YYYY-MM-DD-HH-mm} - ${__to:date:YYYY-MM-DD-HH-mm}",
+      "title": "top 1000 files which are fetched from origin and the avg download time.",
+      "transformations": [],
       "type": "table"
     },
     {
@@ -411,7 +450,7 @@
         "uid": "grafana"
       },
       "gridPos": {
-        "h": 9,
+        "h": 11,
         "w": 8,
         "x": 16,
         "y": 16
@@ -423,7 +462,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# Akamai Caching\n\nThere can be objects that are *potentially* cacheable but have a cacheStatus=0. \nThis might be done on purpose, a TTL that's too short, a Vary header stopping Akamai from caching the object, or just some configuration/caching setup problem.\n\n**Cache is king** 👑, so try to cache as much as possible.\n\n* [Learn about Akamai's caching](https://techdocs.akamai.com/property-mgr/docs/know-caching)\n* [Caching behavior](https://techdocs.akamai.com/property-mgr/docs/caching-2)\n* [Vary header](https://techdocs.akamai.com/property-mgr/docs/rm-vary-header#how-it-works)\n* [Cache Prefresh/Refresh](https://techdocs.akamai.com/property-mgr/docs/cache-prefresh-refresh)\n\n",
+        "content": "# Akamai Caching\n\nThere can be objects that are *potentially* cacheable but have a cacheStatus=0. \nThis might be done on purpose, a TTL that's too short, a Vary header stopping Akamai from caching the object, or just some configuration/caching setup problem.\n\n*When cacheStatus=0, the object is not directly being served from the Akamai Edge server. Testing with [breadcrumb](https://techdocs.akamai.com/datastream2/docs/data-set-parameters#cache-data)\ndata to see if it's the peer[c=c], parent[c=p] or origin[c=o] serving this object.*\n\n**Cache is king** 👑, so try to cache as much as possible.\n\n* [Learn about Akamai's caching](https://techdocs.akamai.com/property-mgr/docs/know-caching)\n* [Caching behavior](https://techdocs.akamai.com/property-mgr/docs/caching-2)\n* [Vary header](https://techdocs.akamai.com/property-mgr/docs/rm-vary-header#how-it-works)\n* [Cache Prefresh/Refresh](https://techdocs.akamai.com/property-mgr/docs/cache-prefresh-refresh)\n\n",
         "mode": "markdown"
       },
       "pluginVersion": "10.1.1",
@@ -435,7 +474,7 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "${DS_HYDROLIX_- customer}"
       },
-      "description": "If cacheStatus=0 it's not directly served from the Edge but might be served from Peer, Parent or Origin. We need breadcrumbs data otherwise we can't found out how served it.",
+      "description": "If cacheStatus=0 it's not directly served from the Edge but might be served from Peer, Parent or Origin. We need breadcrumbs data otherwise we can't find out who served it.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -519,7 +558,7 @@
               },
               {
                 "id": "custom.width",
-                "value": 190
+                "value": 212
               }
             ]
           },
@@ -535,7 +574,7 @@
               },
               {
                 "id": "custom.width",
-                "value": 127
+                "value": 113
               }
             ]
           },
@@ -547,7 +586,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 737
+                "value": 1194
               }
             ]
           },
@@ -569,7 +608,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 25
+        "y": 27
       },
       "id": 8,
       "options": {
@@ -585,8 +624,8 @@
         "showHeader": true,
         "sortBy": [
           {
-            "desc": false,
-            "displayName": "path"
+            "desc": true,
+            "displayName": "hits"
           }
         ]
       },
@@ -606,12 +645,12 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "/*\n*/\nSELECT reqHost as host, reqPath as path, cacheable, count(*) as hits, SUM(rspContentLen) as totalBytes, extract(splitByString('],[', assumeNotNull(breadcrumbs))[-1],'c=(\\w)') AS location\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nAND notEmpty(breadcrumbs)\nGROUP BY host, path, cacheable, location\nHAVING hits > 1\nORDER BY hits DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
+          "rawSql": "/*\n*/\nSELECT reqHost as host, reqPath as path, cacheable, count(*) as hits, SUM(rspContentLen) as totalBytes, extract(splitByString('],[', assumeNotNull(breadcrumbs))[-1],'c=(\\w)') AS location\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType NOT IN (${content_type})\nAND statusCode = 200\nAND cacheStatus = 0\nAND notEmpty(breadcrumbs)\nGROUP BY host, path, cacheable, location\nHAVING hits > 1\nORDER BY hits DESC\nLIMIT 1000\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - uncachedObjects - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 4
         }
       ],
-      "title": "Breadcrumb test showing location object was retrieved from",
+      "title": "Breadcrumb test showing the location object was retrieved from if not served directly from the Edge.",
       "transformations": [],
       "type": "table"
     }
@@ -718,6 +757,6 @@
   "timezone": "",
   "title": "Akamai Uncached hits",
   "uid": "d9d39440-4021-4ff2-ad6f-33f8e0dd73ab",
-  "version": 33,
+  "version": 22,
   "weekStart": ""
 }
