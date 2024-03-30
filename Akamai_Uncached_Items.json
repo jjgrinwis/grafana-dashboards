@@ -247,7 +247,7 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "${DS_HYDROLIX_- customer}"
       },
-      "description": "If we have breadcrumb data, the Hydrolix Transformer should fill in the Origin_IP field.\nSo if cacheStatus=0 and we have an Origin_IP, object is fetched from origin location.\n\nIt looks like the transformer is ignoring the downloadTime field from network performance data\n https://techdocs.akamai.com/datastream2/docs/data-set-parameters#network-performance-data \n If it's part of the datastream output it's stored in the 'unknown' column (map). This might change in the future when Trafficpeak team is putting this in a separate column.",
+      "description": "If we have breadcrumb data, the Hydrolix Transformer should fill in the Origin_IP field.\nSo if cacheStatus=0 and we have an Origin_IP, object is fetched from origin location. If there is no breadcrumb data, we can just check if it's served from the Edge or not.\n\nIt looks like the transformer is ignoring the downloadTime field from network performance data\n https://techdocs.akamai.com/datastream2/docs/data-set-parameters#network-performance-data \n If it's part of the datastream output it's stored in the 'unknown' column (map). This might change in the future when Trafficpeak team is putting this in a separate column.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -311,7 +311,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 63
+                "value": 81
               }
             ]
           },
@@ -360,7 +360,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 665
+                "value": 647
               }
             ]
           },
@@ -440,7 +440,7 @@
           "selectedFormat": 4
         }
       ],
-      "title": "top 1000 files which are fetched from origin and the avg download time.",
+      "title": "top 1000 files which are not fetched directly from the Edge.",
       "transformations": [],
       "type": "table"
     },
@@ -747,7 +747,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-2d",
     "to": "now-1m"
   },
   "timepicker": {
@@ -757,6 +757,6 @@
   "timezone": "",
   "title": "Akamai Uncached hits",
   "uid": "d9d39440-4021-4ff2-ad6f-33f8e0dd73ab",
-  "version": 22,
+  "version": 36,
   "weekStart": ""
 }
