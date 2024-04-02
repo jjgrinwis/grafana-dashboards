@@ -20,6 +20,12 @@
   "__requires": [
     {
       "type": "panel",
+      "id": "annolist",
+      "name": "Annotations list",
+      "version": ""
+    },
+    {
+      "type": "panel",
       "id": "barchart",
       "name": "Bar chart",
       "version": ""
@@ -46,6 +52,12 @@
       "type": "panel",
       "id": "piechart",
       "name": "Pie chart",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
       "version": ""
     },
     {
@@ -102,32 +114,42 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "${DS_HYDROLIX_- customer}"
       },
-      "description": "Get the total amount of bytes served just for the objects with an image content type. Interval stored as a var in the dashboard.",
+      "description": "Get the total amount of bytes served just for the objects with an image content type. Interval stored as a var in the dashboard and fixed via relative time in query options.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "#5770d6",
-            "mode": "continuous-blues"
+            "fixedColor": "blue",
+            "mode": "fixed"
           },
           "custom": {
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisGridShow": true,
-            "axisLabel": "",
+            "axisLabel": "Total Bytes per day",
             "axisPlacement": "auto",
-            "fillOpacity": 58,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
             "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "lineWidth": 1,
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
             "thresholdsStyle": {
-              "mode": "line"
+              "mode": "off"
             }
           },
           "mappings": [],
@@ -151,7 +173,58 @@
             "properties": [
               {
                 "id": "displayName",
-                "value": "total image bytes"
+                "value": "Total image bytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hits"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "none"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "Total Hits per day"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "displayName",
+                "value": "Total image hits"
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "smooth"
               }
             ]
           }
@@ -163,33 +236,19 @@
         "x": 0,
         "y": 0
       },
-      "id": 25,
+      "hideTimeOverride": false,
+      "id": 34,
       "options": {
-        "barRadius": 0.05,
-        "barWidth": 0.85,
-        "colorByField": "bytes",
-        "fullHighlight": false,
-        "groupWidth": 0.7,
         "legend": {
-          "calcs": [
-            "sum"
-          ],
-          "displayMode": "list",
+          "calcs": [],
+          "displayMode": "table",
           "placement": "bottom",
-          "showLegend": false
-        },
-        "orientation": "auto",
-        "showValue": "always",
-        "stacking": "none",
-        "text": {
-          "valueSize": 23
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "none",
+          "mode": "single",
           "sort": "none"
-        },
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
+        }
       },
       "pluginVersion": "10.1.1",
       "targets": [
@@ -207,14 +266,16 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "\nSELECT toStartOfInterval(toDateTime(reqTimeSec), INTERVAL 1 DAY) AS time, sum(rspContentLen) as bytes\nFROM ${table}\nWHERE $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND reqTimeSec >= date_sub(day, ${interval}, today())\nAND rspContentType LIKE 'image/%'\nGROUP BY time\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - images_bytes_per_day - ${__user.login}'",
+          "rawSql": "/*\nUsing UTC by default, you can set specific timezone in toStartOfInterval() if required\n*/\nSELECT toStartOfInterval(toDateTime(reqTimeSec), INTERVAL 1 DAY) AS time, sum(rspContentLen) as bytes, count() as hits\nFROM ${table}\nWHERE $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND reqTimeSec >= date_sub(day, ${interval}, today())\nAND rspContentType LIKE 'image/%'\nGROUP BY time\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - images_bytes_per_day - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 1
         }
       ],
-      "title": "Total image type bytes delivered per day for the last $interval days",
+      "timeFrom": "now-14d/d",
+      "title": "Total image bytes/hits per day",
       "transformations": [
         {
+          "disabled": true,
           "id": "formatTime",
           "options": {
             "outputFormat": "DD-M",
@@ -223,7 +284,7 @@
           }
         }
       ],
-      "type": "barchart"
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -315,10 +376,9 @@
     },
     {
       "datasource": {
-        "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_HYDROLIX_- customer}"
+        "type": "datasource",
+        "uid": "-- Dashboard --"
       },
-      "description": "We first lookup the most active image types based on type for the last your and we're only going to filter on those image types.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -332,18 +392,15 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 40,
-            "gradientMode": "none",
+            "fillOpacity": 85,
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "stepBefore",
-            "lineStyle": {
-              "fill": "solid"
-            },
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -366,39 +423,75 @@
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           },
-          "unit": "decbytes"
+          "unit": "short"
         },
         "overrides": [
           {
             "matcher": {
+              "id": "byName",
+              "options": "hits avif"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hits webp"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
               "id": "byRegexp",
-              "options": "/bytes$/"
+              "options": "/^hits$/"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "total image bytes"
+                "value": "total hits"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "hidden"
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 11,
+        "h": 13,
         "w": 24,
         "x": 0,
         "y": 11
       },
-      "id": 29,
+      "id": 32,
       "options": {
         "legend": {
           "calcs": [
-            "sum",
-            "max",
-            "mean"
+            "sum"
           ],
           "displayMode": "table",
           "placement": "bottom",
@@ -411,29 +504,30 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "10.1.1",
       "targets": [
         {
           "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- customer}"
+            "type": "datasource",
+            "uid": "-- Dashboard --"
           },
-          "format": 1,
-          "meta": {
-            "builderOptions": {
-              "fields": [],
-              "limit": 100,
-              "mode": "list"
-            }
-          },
-          "queryType": "sql",
-          "rawSql": "/*\nLet's first get the most acive image types from the last 1 hour\nAnd use the result as other select statement to get them per time interval\n*/\nWITH top5_image_types AS (\n  SELECT splitByChar('/',assumeNotNull(rspContentType))[2] as contentType, sum(rspContentLen) as bytes\n  FROM ${table}\n  WHERE reqTimeSec >= date_sub(hour, 1, now())\n  AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n  AND rspContentType LIKE 'image/%'\n  GROUP BY contentType\n  ORDER BY bytes DESC\n  LIMIT 5\n) \nSELECT  $__timeInterval(reqTimeSec) as time, splitByChar('/',assumeNotNull(rspContentType))[2] as contentType, sum(rspContentLen) as bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND contentType IN (SELECT contentType FROM top5_image_types)\nGROUP BY time, contentType\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - image - ${__user.login}'",
-          "refId": "A",
-          "selectedFormat": 1
+          "panelId": 29,
+          "refId": "A"
         }
       ],
-      "title": "top 5 image types based on delivered bytes over time per $__interval",
+      "title": "hits per image content type over time",
       "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "time",
+                "contentType",
+                "hits"
+              ]
+            }
+          }
+        },
         {
           "id": "prepareTimeSeries",
           "options": {
@@ -448,7 +542,7 @@
         "type": "grafana-clickhouse-datasource",
         "uid": "${DS_HYDROLIX_- customer}"
       },
-      "description": "Filtering all request for objects where a 404 is returned and grouping them based on extension. If there is no extension using /",
+      "description": "Lookup objects with a content-type which contains/images and sort on the response content-size. If it's just a single hit, image object is probably already optimized by Akamai Image Manager.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -553,14 +647,26 @@
                 "value": 75
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "contentType"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 108
+              }
+            ]
           }
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 12,
         "w": 16,
         "x": 0,
-        "y": 22
+        "y": 24
       },
       "id": 23,
       "options": {
@@ -597,7 +703,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "/*\n*/\nSELECT rspContentLen as size,  count(*) as hits, sum(rspContentLen) as total, reqHost, reqPath\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType LIKE 'image/%'\nGROUP BY reqHost, size, reqPath\nORDER BY size DESC\nLIMIT 50\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - 404resp - ${__user.login}'",
+          "rawSql": "/*\n*/\nSELECT rspContentLen as size,  count(*) as hits, sum(rspContentLen) as total, reqHost, splitByChar('/',assumeNotNull(rspContentType))[2] as contentType, reqPath\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType LIKE 'image/%'\nGROUP BY reqHost, size, reqPath, contentType\nORDER BY size DESC\nLIMIT 50\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - 404resp - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 1
         }
@@ -615,7 +721,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 22
+        "y": 24
       },
       "id": 31,
       "options": {
@@ -624,11 +730,231 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# Large Images\n\nPeople make mistakes, that makes us human 😉. But sending images with a *content-length* of a couple of MBs is a very, very **bad** idea.\nIt will negatively impact the performance of your site and you are just waisting resources. 🚮\n\n[Akamai Image and Video Manager (IVM)](https://www.akamai.com/products/image-and-video-manager) can help you by automatically optimizing your images and serve it in next-gen formats like [webp](https://developers.google.com/speed/webp) \nand [avif](https://en.wikipedia.org/wiki/AVIF). \n\nSo if somebody is uploading images of 50MB, again 😡. Don't worry, IVM will automatically optimize and enhance your images.\n",
+        "content": "# Large Images\n\nPeople make mistakes, that makes us human 😉. But sending images with a *content-length* of a couple of MBs is a very, very **bad** idea.\nIt will negatively impact the performance of your site and you are just waisting resources. 🚮\n\n[Akamai Image and Video Manager (IVM)](https://www.akamai.com/products/image-and-video-manager) can help you by automatically optimizing your images and serve them in next-gen formats like [webp](https://developers.google.com/speed/webp) \nand [avif](https://en.wikipedia.org/wiki/AVIF). \n\nSo if somebody is uploading images of 50MB, again 😡. Don't worry, IVM will automatically optimize and enhance your images.\n",
         "mode": "markdown"
       },
       "pluginVersion": "10.1.1",
       "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 32
+      },
+      "id": 33,
+      "options": {
+        "limit": 10,
+        "navigateAfter": "10m",
+        "navigateBefore": "10m",
+        "navigateToPanel": true,
+        "onlyFromThisDashboard": false,
+        "onlyInTimeRange": false,
+        "showTags": true,
+        "showTime": true,
+        "showUser": true
+      },
+      "title": "Annotations",
+      "type": "annolist"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- customer}"
+      },
+      "description": "We first lookup the most active image types based on type for the last your and we're only going to filter on those image types. As graph was unreadable we're only showing the total image bytes served over time. Doing this lookup just once and reusing the data in other visualization.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 22,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/bytes$/"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "total image bytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes avif"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes webp"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hits"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hits"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "total hits"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 36
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- customer}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "/*\nLet's first get the most acive image types from the last 1 hour\nAnd use the result as other select statement to get them per time interval.\n*/\nWITH top5_image_types AS (\n  SELECT splitByChar('/',assumeNotNull(rspContentType))[2] as contentType, sum(rspContentLen) as bytes\n  FROM ${table}\n  WHERE reqTimeSec >= date_sub(hour, 1, now())\n  AND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\n  AND rspContentType LIKE 'image/%'\n  GROUP BY contentType\n  ORDER BY bytes DESC\n  LIMIT 5\n) \nSELECT  $__timeInterval(reqTimeSec) as time, splitByChar('/',assumeNotNull(rspContentType))[2] as contentType, count(*) as hits, sum(rspContentLen) as bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND contentType IN (SELECT contentType FROM top5_image_types)\n/*\nTesting a grouping set. We're creating two groups, one with the image types and a total per timeinterval.\nAs the bytes per image type was not very usefull created a separate group with the total hits.\nThere is another visualisation using the output from this single query.\n*/\nGROUP BY \n  GROUPING SETS(\n\t\t(time, contentType),\n\t\t(time)\n\t\t)\nORDER BY time, hits\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - image - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 1
+        }
+      ],
+      "title": "total image bytes served for the top-5 image types per $__interval",
+      "transformations": [
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "multi"
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "time"
+              ],
+              "pattern": "/^bytes$/"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -645,8 +971,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -662,7 +987,7 @@
         "h": 11,
         "w": 12,
         "x": 0,
-        "y": 30
+        "y": 48
       },
       "id": 26,
       "options": {
@@ -749,7 +1074,7 @@
         "h": 11,
         "w": 12,
         "x": 12,
-        "y": 30
+        "y": 48
       },
       "id": 30,
       "options": {
@@ -815,9 +1140,235 @@
         }
       ],
       "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- customer}"
+      },
+      "description": "Get the total amount of bytes served just for the objects with an image content type. Interval stored as a var in the dashboard.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5770d6",
+            "mode": "continuous-blues"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 58,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/bytes$/"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "total image bytes"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 18,
+        "x": 0,
+        "y": 59
+      },
+      "id": 25,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.85,
+        "colorByField": "bytes",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "always",
+        "stacking": "none",
+        "text": {
+          "valueSize": 23
+        },
+        "tooltip": {
+          "mode": "none",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- customer}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "\nSELECT toStartOfInterval(toDateTime(reqTimeSec), INTERVAL 1 DAY) AS time, sum(rspContentLen) as bytes\nFROM ${table}\nWHERE $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND reqTimeSec >= date_sub(day, ${interval}, today())\nAND rspContentType LIKE 'image/%'\nGROUP BY time\nORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - images_bytes_per_day - ${__user.login}'",
+          "refId": "A",
+          "selectedFormat": 1
+        }
+      ],
+      "title": "Total image type bytes delivered per day for the last $interval days",
+      "transformations": [
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "DD-M",
+            "timeField": "time",
+            "useTimezone": true
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#153a72",
+            "mode": "shades"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/^hits$/"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "total hits"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 6,
+        "x": 18,
+        "y": 59
+      },
+      "id": 35,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 29,
+          "refId": "A"
+        }
+      ],
+      "title": "total hits per image type over time",
+      "transformations": [
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "multi"
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "time",
+                "hits jpeg",
+                "hits png",
+                "hits svg+xml",
+                "hits webp",
+                "hits avif"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "stat"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
@@ -927,7 +1478,7 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-5d",
     "to": "now-1m"
   },
   "timepicker": {
@@ -937,6 +1488,6 @@
   "timezone": "",
   "title": "Akamai Images",
   "uid": "d4d8eeed-7fd0-408b-a11c-a76781807c89",
-  "version": 39,
+  "version": 72,
   "weekStart": ""
 }
