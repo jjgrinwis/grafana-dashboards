@@ -703,7 +703,7 @@
             }
           },
           "queryType": "sql",
-          "rawSql": "/*\n*/\nSELECT rspContentLen as size,  count(*) as hits, sum(rspContentLen) as total, reqHost, splitByChar('/',assumeNotNull(rspContentType))[2] as contentType, reqPath\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType LIKE 'image/%'\nGROUP BY reqHost, size, reqPath, contentType\nORDER BY size DESC\nLIMIT 50\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - 404resp - ${__user.login}'",
+          "rawSql": "/*\n*/\nSELECT rspContentLen as size,  count(*) as hits, sum(rspContentLen) as total, reqHost, splitByChar('/',assumeNotNull(rspContentType))[2] as contentType, reqPath\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND rspContentType LIKE 'image/%'\nGROUP BY reqHost, size, reqPath, contentType\nORDER BY size DESC\nLIMIT 50\nSETTINGS hdx_query_max_execution_time=60, hdx_query_max_peers=2, hdx_query_admin_comment='akamai - 404resp - ${__user.login}'",
           "refId": "A",
           "selectedFormat": 1
         }
@@ -810,7 +810,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           },
@@ -971,7 +972,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1179,7 +1181,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           },
@@ -1284,7 +1287,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1478,7 +1482,7 @@
     ]
   },
   "time": {
-    "from": "now-5d",
+    "from": "now-7d",
     "to": "now-1m"
   },
   "timepicker": {
@@ -1488,6 +1492,6 @@
   "timezone": "",
   "title": "Akamai Images",
   "uid": "d4d8eeed-7fd0-408b-a11c-a76781807c89",
-  "version": 72,
+  "version": 73,
   "weekStart": ""
 }
