@@ -1,4 +1,65 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_HYDROLIX_- POSTNL_GROUP_IT",
+      "label": "Hydrolix - PostNL_Group_IT",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "grafana-clickhouse-datasource",
+      "pluginName": "ClickHouse"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.4.1"
+    },
+    {
+      "type": "datasource",
+      "id": "grafana-clickhouse-datasource",
+      "name": "ClickHouse",
+      "version": "4.0.4"
+    },
+    {
+      "type": "panel",
+      "id": "logs",
+      "name": "Logs",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "marcusolsson-treemap-panel",
+      "name": "Treemap",
+      "version": "2.0.1"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -18,7 +79,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 732,
+  "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -63,7 +124,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
       },
       "description": "Timers description\n* tls: After the TCP connection is established, there will be a handshake to establish the TLS connection. This measures how long it takes to establish that TLS connection\n* reqEndTime: After the TLS connection is established, the request is sent. This measures how long it takes to send the request.\n* DNS Time: After the request is sent, the edge server may need to lookup the IP address of the origin. When that happens, this measures how long it took.\n* turnAroundTime: After the request was received, how long until Akamai sent back the first byte of the response.\n* transferTime: If there are multiple TCP packets in the response, how long from the first packet send until the last packet sent (download time)",
       "fieldConfig": {
@@ -194,7 +255,7 @@
           },
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "format": 1,
           "meta": {
@@ -259,7 +320,7 @@
           },
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "editorType": "builder",
           "format": 1,
@@ -275,7 +336,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
       },
       "description": "Shows how many total requests were sent in this time period",
       "fieldConfig": {
@@ -377,7 +438,7 @@
           },
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "format": 1,
           "meta": {
@@ -440,7 +501,7 @@
           },
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "hide": true,
           "queryType": "builder",
@@ -454,7 +515,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
       },
       "description": "Timers description\n* tls: After the TCP connection is established, there will be a handshake to establish the TLS connection. This measures how long it takes to establish that TLS connection\n* reqEndTime: After the TLS connection is established, the request is sent. This measures how long it takes to send the request.\n* DNS Time: After the request is sent, the edge server may need to lookup the IP address of the origin. When that happens, this measures how long it took.\n* turnAroundTime: After the request was received, how long until Akamai sent back the first byte of the response.\n* transferTime: If there are multiple TCP packets in the response, how long from the first packet send until the last packet sent (download time)",
       "fieldConfig": {
@@ -560,7 +621,7 @@
           },
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "format": 1,
           "meta": {
@@ -623,7 +684,7 @@
           },
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "hide": true,
           "queryType": "builder",
@@ -637,7 +698,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
       },
       "description": "What percentage of requests incurred additional time for each of these timers:\n* tls : If a request is sent on an already established TLS connection, then the request will have no TLS time\n* DNS Time: If the IP address of all necessary servers are fresh in DNS cache, then there will be no DNS time incurred\n* transferTime: If the entire response is sent in the first TCP packet, then there will be now transferTime",
       "fieldConfig": {
@@ -730,7 +791,7 @@
           },
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "format": 1,
           "meta": {
@@ -793,7 +854,7 @@
           },
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "hide": true,
           "queryType": "builder",
@@ -817,7 +878,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "Most common content types at top.",
           "fieldConfig": {
@@ -837,8 +898,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "dark-green",
-                    "value": null
+                    "color": "dark-green"
                   },
                   {
                     "color": "yellow",
@@ -911,7 +971,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "format": 1,
               "meta": {
@@ -933,7 +993,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "Most common content types at top.",
           "fieldConfig": {
@@ -953,8 +1013,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "yellow",
@@ -1027,7 +1086,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "format": 1,
               "meta": {
@@ -1049,7 +1108,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "Most common content types at top.",
           "fieldConfig": {
@@ -1069,8 +1128,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "yellow",
@@ -1147,7 +1205,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "format": 1,
               "meta": {
@@ -1169,7 +1227,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "Most common content types at top.",
           "fieldConfig": {
@@ -1188,8 +1246,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "dark-green",
-                    "value": null
+                    "color": "dark-green"
                   },
                   {
                     "color": "green",
@@ -1266,7 +1323,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "format": 1,
               "meta": {
@@ -1288,7 +1345,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "Most common content types at top.",
           "fieldConfig": {
@@ -1308,8 +1365,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "dark-green",
-                    "value": null
+                    "color": "dark-green"
                   },
                   {
                     "color": "green",
@@ -1390,7 +1446,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "format": 1,
               "meta": {
@@ -1412,7 +1468,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "Most common content types at top.",
           "fieldConfig": {
@@ -1432,8 +1488,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "dark-green",
-                    "value": null
+                    "color": "dark-green"
                   },
                   {
                     "color": "green",
@@ -1510,7 +1565,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "format": 1,
               "meta": {
@@ -1546,7 +1601,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "",
           "gridPos": {
@@ -1571,7 +1626,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "format": 1,
               "meta": {
@@ -1607,7 +1662,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "fieldConfig": {
             "defaults": {
@@ -1619,8 +1674,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1673,7 +1727,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -1729,7 +1783,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "fieldConfig": {
             "defaults": {
@@ -1741,8 +1795,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1782,7 +1835,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -1838,7 +1891,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "fieldConfig": {
             "defaults": {
@@ -1850,8 +1903,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1891,7 +1943,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -1947,7 +1999,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "fieldConfig": {
             "defaults": {
@@ -1959,8 +2011,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -1996,7 +2047,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -2052,7 +2103,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "fieldConfig": {
             "defaults": {
@@ -2064,8 +2115,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2105,7 +2155,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -2161,7 +2211,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "fieldConfig": {
             "defaults": {
@@ -2180,8 +2230,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2243,7 +2292,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -2316,7 +2365,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2328,8 +2377,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2382,7 +2430,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "editorType": "sql",
           "format": 1,
@@ -2438,7 +2486,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2450,8 +2498,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2491,7 +2538,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "editorType": "sql",
           "format": 1,
@@ -2547,7 +2594,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2559,8 +2606,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2600,7 +2646,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "editorType": "sql",
           "format": 1,
@@ -2656,7 +2702,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2668,8 +2714,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2709,7 +2754,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "editorType": "sql",
           "format": 1,
@@ -2765,7 +2810,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2777,8 +2822,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -2814,7 +2858,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "editorType": "sql",
           "format": 1,
@@ -2870,7 +2914,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2889,8 +2933,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2952,7 +2995,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "editorType": "sql",
           "format": 1,
@@ -3018,7 +3061,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "",
           "fieldConfig": {
@@ -3032,8 +3075,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3073,7 +3115,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -3129,7 +3171,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "",
           "fieldConfig": {
@@ -3142,8 +3184,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3183,7 +3224,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -3239,7 +3280,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "",
           "fieldConfig": {
@@ -3252,8 +3293,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3293,7 +3333,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -3349,7 +3389,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "",
           "fieldConfig": {
@@ -3362,8 +3402,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -3399,7 +3438,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -3455,7 +3494,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3474,8 +3513,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3537,7 +3575,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -3607,7 +3645,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "",
           "fieldConfig": {
@@ -3621,8 +3659,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3662,7 +3699,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -3718,7 +3755,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "",
           "fieldConfig": {
@@ -3732,8 +3769,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3773,7 +3809,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -3829,7 +3865,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "",
           "fieldConfig": {
@@ -3843,8 +3879,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3884,7 +3919,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -3940,7 +3975,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "description": "",
           "fieldConfig": {
@@ -3954,8 +3989,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -3991,7 +4025,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -4047,7 +4081,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
           },
           "fieldConfig": {
             "defaults": {
@@ -4066,8 +4100,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -4129,7 +4162,7 @@
             {
               "datasource": {
                 "type": "grafana-clickhouse-datasource",
-                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
               },
               "editorType": "sql",
               "format": 1,
@@ -4193,14 +4226,10 @@
   "templating": {
     "list": [
       {
-        "current": {
-          "selected": false,
-          "text": "PostNL_Group_IT.logs",
-          "value": "PostNL_Group_IT.logs"
-        },
+        "current": {},
         "datasource": {
           "type": "grafana-clickhouse-datasource",
-          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
         },
         "definition": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
         "hide": 2,
@@ -4323,14 +4352,10 @@
         "type": "custom"
       },
       {
-        "current": {
-          "selected": false,
-          "text": "",
-          "value": ""
-        },
+        "current": {},
         "datasource": {
           "type": "grafana-clickhouse-datasource",
-          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
         },
         "definition": "select rspContentType \nfrom ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by rspContentType\norder by count (rspContentType) desc",
         "description": "Content Type. Ordered by most common first. ",
@@ -4348,20 +4373,10 @@
         "type": "query"
       },
       {
-        "current": {
-          "selected": true,
-          "text": [
-            "productprijslokatie.postnl.nl",
-            ""
-          ],
-          "value": [
-            "productprijslokatie.postnl.nl",
-            ""
-          ]
-        },
+        "current": {},
         "datasource": {
           "type": "grafana-clickhouse-datasource",
-          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
         },
         "definition": "select reqHost from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by reqHost\norder by count (reqHost) desc",
         "description": "Hostnames. Ordered most common first.",
@@ -4379,18 +4394,10 @@
         "type": "query"
       },
       {
-        "current": {
-          "selected": true,
-          "text": [
-            "500"
-          ],
-          "value": [
-            "500"
-          ]
-        },
+        "current": {},
         "datasource": {
           "type": "grafana-clickhouse-datasource",
-          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
         },
         "definition": "select statusCode from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by statusCode\norder by count (statusCode) desc",
         "description": "Status Codes. Ordered most common first.",
@@ -4408,14 +4415,10 @@
         "type": "query"
       },
       {
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
+        "current": {},
         "datasource": {
           "type": "grafana-clickhouse-datasource",
-          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
         },
         "definition": "select country from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by country\norder by count (country) desc",
         "description": "Countries. Ordered most common first.",
@@ -4433,14 +4436,10 @@
         "type": "query"
       },
       {
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
+        "current": {},
         "datasource": {
           "type": "grafana-clickhouse-datasource",
-          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
         },
         "definition": "select cacheStatus from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by cacheStatus\norder by count (cacheStatus) desc",
         "description": "Cache Status. Ordered most common first.",
@@ -4477,13 +4476,13 @@
     ]
   },
   "time": {
-    "from": "2024-04-15T22:22:03.318Z",
-    "to": "2024-04-16T00:32:17.106Z"
+    "from": "now-24h",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Performance Analysis",
   "uid": "c60c8057-7671-4557-bf75-5b84cb593781",
-  "version": 6,
+  "version": 7,
   "weekStart": ""
 }
