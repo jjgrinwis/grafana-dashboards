@@ -1,0 +1,4489 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 732,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 57,
+      "panels": [],
+      "title": "Performance Timers",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 47,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# INFO\nPress 'v' to enlarge.\nFor markdown syntax help: [commonmark.org/help](https://commonmark.org/help/)",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.4.1",
+      "title": "Press 'v'",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+      },
+      "description": "Timers description\n* tls: After the TCP connection is established, there will be a handshake to establish the TLS connection. This measures how long it takes to establish that TLS connection\n* reqEndTime: After the TLS connection is established, the request is sent. This measures how long it takes to send the request.\n* DNS Time: After the request is sent, the edge server may need to lookup the IP address of the origin. When that happens, this measures how long it took.\n* turnAroundTime: After the request was received, how long until Akamai sent back the first byte of the response.\n* transferTime: If there are multiple TCP packets in the response, how long from the first packet send until the last packet sent (download time)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "tls"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TLS_percent"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 20,
+        "x": 4,
+        "y": 1
+      },
+      "id": 55,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "Akamai_Dashboard_Development",
+            "fields": [],
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "reqTimeSec",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "reqTimeSec",
+                    "name": "reqTimeSec",
+                    "picklistValues": [],
+                    "type": "DateTime"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "Akamai_Dashboard_Development",
+              "fields": [],
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "reqTimeSec",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "reqTimeSec",
+                      "name": "reqTimeSec",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  $__timeInterval(reqTimeSec) as time,\n${AggType}(tlsOverheadTimeMSec) as tls,\n${AggType}(transferTimeMSec) as transferTime,\n${AggType}(dnsLookupTimeMSec) as dnsTime,\n${AggType}(turnAroundTimeMSec) as turnAroundTime,\n${AggType}(reqEndTimeMSec) as endTime\nFROM ${ds2}\n WHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\ngroup by time\n",
+          "refId": "A",
+          "selectedFormat": 4
+        },
+        {
+          "builderOptions": {
+            "columns": [],
+            "database": "Akamai_Dashboard_Development",
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "reqTimeSec",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "reqTimeSec",
+                    "name": "reqTimeSec",
+                    "picklistValues": [],
+                    "type": "DateTime"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "meta": {},
+            "mode": "list",
+            "orderBy": [],
+            "queryType": "table",
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "editorType": "builder",
+          "format": 1,
+          "hide": true,
+          "pluginVersion": "4.0.4",
+          "rawSql": "SELECT FROM \"Akamai_Dashboard_Development\".\"logs\" WHERE ( reqTimeSec >= $__fromTime AND reqTimeSec <= $__toTime ) LIMIT 100",
+          "refId": "B"
+        }
+      ],
+      "title": "Performance Timer Values (${AggType})",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+      },
+      "description": "Shows how many total requests were sent in this time period",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TLS_percent"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 0,
+        "y": 6
+      },
+      "id": 46,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "Akamai_Dashboard_Development",
+            "fields": [],
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "reqTimeSec",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "reqTimeSec",
+                    "name": "reqTimeSec",
+                    "picklistValues": [],
+                    "type": "DateTime"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "Akamai_Dashboard_Development",
+              "fields": [],
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "reqTimeSec",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "reqTimeSec",
+                      "name": "reqTimeSec",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  $__timeInterval(reqTimeSec) as time,\ncount(*) as count\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\ngroup by time\n",
+          "refId": "A",
+          "selectedFormat": 4
+        },
+        {
+          "builderOptions": {
+            "database": "Akamai_Dashboard_Development",
+            "fields": [],
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "reqTimeSec",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "reqTimeSec",
+                    "name": "reqTimeSec",
+                    "picklistValues": [],
+                    "type": "DateTime"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "hide": true,
+          "queryType": "builder",
+          "rawSql": "SELECT  FROM \"Akamai_Dashboard_Development\".\"logs\" WHERE   ( reqTimeSec  >= $__fromTime AND reqTimeSec <= $__toTime ) LIMIT 100",
+          "refId": "B"
+        }
+      ],
+      "title": "Total Requests ",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+      },
+      "description": "Timers description\n* tls: After the TCP connection is established, there will be a handshake to establish the TLS connection. This measures how long it takes to establish that TLS connection\n* reqEndTime: After the TLS connection is established, the request is sent. This measures how long it takes to send the request.\n* DNS Time: After the request is sent, the edge server may need to lookup the IP address of the origin. When that happens, this measures how long it took.\n* turnAroundTime: After the request was received, how long until Akamai sent back the first byte of the response.\n* transferTime: If there are multiple TCP packets in the response, how long from the first packet send until the last packet sent (download time)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "tls"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TLS_percent"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 31,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "repeat": "AggType",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "Akamai_Dashboard_Development",
+            "fields": [],
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "reqTimeSec",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "reqTimeSec",
+                    "name": "reqTimeSec",
+                    "picklistValues": [],
+                    "type": "DateTime"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "Akamai_Dashboard_Development",
+              "fields": [],
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "reqTimeSec",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "reqTimeSec",
+                      "name": "reqTimeSec",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  \n${AggType}(tlsOverheadTimeMSec) as tls,\n${AggType}(reqEndTimeMSec) as reqEndTime,\n${AggType}(dnsLookupTimeMSec) as dnsTime,\n${AggType}(turnAroundTimeMSec) as turnAroundTime,\n${AggType}(transferTimeMSec) as transferTime\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )",
+          "refId": "A",
+          "selectedFormat": 4
+        },
+        {
+          "builderOptions": {
+            "database": "Akamai_Dashboard_Development",
+            "fields": [],
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "reqTimeSec",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "reqTimeSec",
+                    "name": "reqTimeSec",
+                    "picklistValues": [],
+                    "type": "DateTime"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "hide": true,
+          "queryType": "builder",
+          "rawSql": "SELECT  FROM \"Akamai_Dashboard_Development\".\"logs\" WHERE   ( reqTimeSec  >= $__fromTime AND reqTimeSec <= $__toTime ) LIMIT 100",
+          "refId": "B"
+        }
+      ],
+      "title": "Performance Timer Values (${AggType})",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+      },
+      "description": "What percentage of requests incurred additional time for each of these timers:\n* tls : If a request is sent on an already established TLS connection, then the request will have no TLS time\n* DNS Time: If the IP address of all necessary servers are fresh in DNS cache, then there will be no DNS time incurred\n* transferTime: If the entire response is sent in the first TCP packet, then there will be now transferTime",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TLS_percent"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 56,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "Akamai_Dashboard_Development",
+            "fields": [],
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "reqTimeSec",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "reqTimeSec",
+                    "name": "reqTimeSec",
+                    "picklistValues": [],
+                    "type": "DateTime"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "Akamai_Dashboard_Development",
+              "fields": [],
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "reqTimeSec",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "reqTimeSec",
+                      "name": "reqTimeSec",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  \ncountIf(tlsOverheadTimeMSec>0)/count(*) as tls,\ncountIf(reqEndTimeMSec>0)/count(*) as endTime,\ncountIf(dnsLookupTimeMSec>0)/count(*) as dnsTime,\ncountIf(turnAroundTimeMSec>0)/count(*) as turnAroundTime,\ncountIf(transferTimeMSec>0)/count(*) as transferTime\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )",
+          "refId": "A",
+          "selectedFormat": 4
+        },
+        {
+          "builderOptions": {
+            "database": "Akamai_Dashboard_Development",
+            "fields": [],
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "reqTimeSec",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "reqTimeSec",
+                    "name": "reqTimeSec",
+                    "picklistValues": [],
+                    "type": "DateTime"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "hide": true,
+          "queryType": "builder",
+          "rawSql": "SELECT  FROM \"Akamai_Dashboard_Development\".\"logs\" WHERE   ( reqTimeSec  >= $__fromTime AND reqTimeSec <= $__toTime ) LIMIT 100",
+          "refId": "B"
+        }
+      ],
+      "title": "Performance Timer Frequency",
+      "type": "stat"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 37,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "Most common content types at top.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "links": [
+                {
+                  "title": "Filter to this country",
+                  "url": "/d/${__dashboard.uid}﻿/﻿${__dashboard}﻿?﻿var-country=${__data.fields.metric}﻿&${reqId:queryparam}﻿&${metric:queryparam}﻿&﻿${AggType:queryparam}﻿&${rspContentType:queryparam}﻿&${reqHost:queryparam}﻿&﻿${statusCode:queryparam}﻿&${cacheStatus:queryparam}﻿&${pathLike:queryparam}"
+                }
+              ],
+              "mappings": [],
+              "noValue": "-",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 25
+                  },
+                  {
+                    "color": "orange",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-orange",
+                    "value": 75
+                  },
+                  {
+                    "color": "red",
+                    "value": 100
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 200
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "agg_value"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "ms"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "count"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 8,
+            "x": 0,
+            "y": 23
+          },
+          "id": 50,
+          "options": {
+            "colorByField": "agg_value",
+            "labelFields": [
+              "agg_value"
+            ],
+            "sizeField": "count",
+            "textField": "metric",
+            "tiling": "treemapSquarify"
+          },
+          "pluginVersion": "10.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "fields": [],
+                  "limit": 100,
+                  "mode": "list"
+                }
+              },
+              "queryType": "sql",
+              "rawSql": "SELECT  coalesce(country,'-') as metric, $AggType($metric) as agg_value, count(*) as count\nFROM  ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\ngroup by metric\norder by $AggType($metric)  desc\nLIMIT 500",
+              "refId": "A",
+              "selectedFormat": 4
+            }
+          ],
+          "title": "${metric} by Country (${AggType})",
+          "type": "marcusolsson-treemap-panel"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "Most common content types at top.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "links": [
+                {
+                  "targetBlank": true,
+                  "title": "Filter to this content type",
+                  "url": "/d/${__dashboard.uid}﻿/﻿${__dashboard}﻿?﻿var-rspContentType=${__data.fields.metric:text}&${reqId:queryparam}﻿&${metric:queryparam}﻿&﻿${AggType:queryparam}﻿﻿&${reqHost:queryparam}﻿&﻿${statusCode:queryparam}﻿&${country:queryparam}﻿&${cacheStatus:queryparam}﻿&${pathLike:queryparam}"
+                }
+              ],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 25
+                  },
+                  {
+                    "color": "orange",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-orange",
+                    "value": 75
+                  },
+                  {
+                    "color": "red",
+                    "value": 100
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 200
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "agg_value"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "ms"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "count"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 8,
+            "x": 8,
+            "y": 23
+          },
+          "id": 49,
+          "options": {
+            "colorByField": "agg_value",
+            "labelFields": [
+              "agg_value"
+            ],
+            "sizeField": "count",
+            "textField": "metric",
+            "tiling": "treemapSquarify"
+          },
+          "pluginVersion": "10.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "fields": [],
+                  "limit": 100,
+                  "mode": "list"
+                }
+              },
+              "queryType": "sql",
+              "rawSql": "SELECT  coalesce(rspContentType,'-') as metric, $AggType($metric) as agg_value, count(*) as count\nFROM  ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\ngroup by metric\norder by $AggType($metric)  desc\nLIMIT 500",
+              "refId": "A",
+              "selectedFormat": 4
+            }
+          ],
+          "title": "${metric} by Content Type (${AggType})",
+          "type": "marcusolsson-treemap-panel"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "Most common content types at top.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "links": [
+                {
+                  "targetBlank": false,
+                  "title": "Filter to this hostname",
+                  "url": "/d/${__dashboard.uid}﻿﻿/﻿﻿${__dashboard}﻿﻿?﻿var-reqHost=﻿${__data.fields.metric}﻿&﻿${reqId:queryparam}﻿﻿&﻿${metric:queryparam}﻿﻿&﻿﻿${AggType:queryparam}﻿﻿&﻿${rspContentType:queryparam}﻿﻿&﻿﻿${statusCode:queryparam}﻿﻿&﻿${country:queryparam}﻿﻿&﻿${cacheStatus:queryparam}﻿﻿&﻿${pathLike:queryparam}﻿&${__url_time_range}"
+                }
+              ],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 25
+                  },
+                  {
+                    "color": "orange",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-orange",
+                    "value": 75
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  },
+                  {
+                    "color": "red",
+                    "value": 100
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 200
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "agg_value"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "ms"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "count"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 8,
+            "x": 16,
+            "y": 23
+          },
+          "id": 51,
+          "options": {
+            "colorByField": "agg_value",
+            "labelFields": [
+              "agg_value"
+            ],
+            "sizeField": "count",
+            "textField": "metric",
+            "tiling": "treemapSquarify"
+          },
+          "pluginVersion": "10.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "fields": [],
+                  "limit": 100,
+                  "mode": "list"
+                }
+              },
+              "queryType": "sql",
+              "rawSql": "SELECT  coalesce(reqHost,'-') as metric, $AggType($metric) as agg_value, count(*) as count\nFROM  ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\ngroup by metric\norder by $AggType($metric)  desc\nLIMIT 500",
+              "refId": "A",
+              "selectedFormat": 4
+            }
+          ],
+          "title": "${metric} by Hostname (${AggType})",
+          "type": "marcusolsson-treemap-panel"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "Most common content types at top.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "links": [
+                {
+                  "title": "Filter to this path",
+                  "url": "/d/${__dashboard.uid}﻿/﻿${__dashboard}﻿?﻿${reqId:queryparam}﻿&${metric:queryparam}﻿&﻿${AggType:queryparam}﻿&${rspContentType:queryparam}﻿&${reqHost:queryparam}﻿&﻿${statusCode:queryparam}﻿&${country:queryparam}﻿&${cacheStatus:queryparam}﻿&var-pathLike=${__data.fields.metric}"
+                }
+              ],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-green",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 10
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 25
+                  },
+                  {
+                    "color": "orange",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-orange",
+                    "value": 75
+                  },
+                  {
+                    "color": "red",
+                    "value": 100
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 200
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "agg_value"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "ms"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "count"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 8,
+            "x": 0,
+            "y": 34
+          },
+          "id": 52,
+          "options": {
+            "colorByField": "agg_value",
+            "labelFields": [
+              "agg_value"
+            ],
+            "sizeField": "count",
+            "textField": "metric",
+            "tiling": "treemapSquarify"
+          },
+          "pluginVersion": "10.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "fields": [],
+                  "limit": 100,
+                  "mode": "list"
+                }
+              },
+              "queryType": "sql",
+              "rawSql": "SELECT  coalesce(reqPath,'-') as metric, $AggType($metric) as agg_value, count(*) as count\nFROM  ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\ngroup by metric\norder by $AggType($metric)  desc\nLIMIT 1000",
+              "refId": "A",
+              "selectedFormat": 4
+            }
+          ],
+          "title": "${metric} by Path (${AggType})",
+          "type": "marcusolsson-treemap-panel"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "Most common content types at top.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "links": [
+                {
+                  "targetBlank": true,
+                  "title": "Filter to this status code",
+                  "url": "/d/${__dashboard.uid}﻿/﻿${__dashboard}﻿?﻿var-statusCode=${__data.fields.metric}&${reqId:queryparam}﻿&${metric:queryparam}﻿&﻿${AggType:queryparam}﻿&${rspContentType:queryparam}﻿&${reqHost:queryparam}﻿﻿&${country:queryparam}﻿&${pathLike:queryparam}&${__url_time_range}&cacheStatus=${cacheStatus:queryparam}"
+                }
+              ],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-green",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 10
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 25
+                  },
+                  {
+                    "color": "orange",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-orange",
+                    "value": 75
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  },
+                  {
+                    "color": "red",
+                    "value": 100
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 200
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "agg_value"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "ms"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "count"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 8,
+            "x": 8,
+            "y": 34
+          },
+          "id": 53,
+          "options": {
+            "colorByField": "agg_value",
+            "labelFields": [
+              "agg_value"
+            ],
+            "sizeField": "count",
+            "textField": "metric",
+            "tiling": "treemapSquarify"
+          },
+          "pluginVersion": "10.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "fields": [],
+                  "limit": 100,
+                  "mode": "list"
+                }
+              },
+              "queryType": "sql",
+              "rawSql": "SELECT  coalesce(toString(statusCode),'-') as metric, $AggType($metric) as agg_value, count(*) as count\nFROM  ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\ngroup by metric\norder by $AggType($metric)  desc\nLIMIT 1000",
+              "refId": "A",
+              "selectedFormat": 4
+            }
+          ],
+          "title": "${metric} by Status Code (${AggType})",
+          "type": "marcusolsson-treemap-panel"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "Most common content types at top.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "links": [
+                {
+                  "targetBlank": true,
+                  "title": "Filter to this CacheStatus",
+                  "url": "/d/${__dashboard.uid}﻿/﻿${__dashboard}﻿?﻿var-cacheStatus=${__data.fields.metric}&${reqId:queryparam}﻿&${metric:queryparam}﻿&﻿${AggType:queryparam}﻿&${rspContentType:queryparam}﻿&${reqHost:queryparam}﻿&﻿${statusCode:queryparam}﻿&${country:queryparam}﻿﻿&${pathLike:queryparam}&${__url_time_range}"
+                }
+              ],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-green",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 10
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 25
+                  },
+                  {
+                    "color": "orange",
+                    "value": 50
+                  },
+                  {
+                    "color": "dark-orange",
+                    "value": 75
+                  },
+                  {
+                    "color": "red",
+                    "value": 100
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 200
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "agg_value"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "ms"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "count"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 8,
+            "x": 16,
+            "y": 34
+          },
+          "id": 54,
+          "options": {
+            "colorByField": "agg_value",
+            "labelFields": [
+              "agg_value"
+            ],
+            "sizeField": "count",
+            "textField": "metric",
+            "tiling": "treemapSquarify"
+          },
+          "pluginVersion": "10.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "fields": [],
+                  "limit": 100,
+                  "mode": "list"
+                }
+              },
+              "queryType": "sql",
+              "rawSql": "SELECT  coalesce(toString(cacheStatus),'-') as metric, \n$AggType($metric) as agg_value, count(*) as count\nFROM  ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\ngroup by metric\norder by $AggType($metric)  desc\nLIMIT 1000",
+              "refId": "A",
+              "selectedFormat": 4
+            }
+          ],
+          "title": "${metric} by Cache Status (${AggType})",
+          "type": "marcusolsson-treemap-panel"
+        }
+      ],
+      "title": "Treemaps: ${metric} Across Various Dimensions (select different 'Treemaps Timer' from drop-down)",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 58,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "",
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 24
+          },
+          "id": 59,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "pluginVersion": "10.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "fields": [],
+                  "limit": 100,
+                  "mode": "list"
+                }
+              },
+              "queryType": "sql",
+              "rawSql": "SELECT toString(statusCode), UA,accLang,billingRegion,bytes,cacheStatus,cacheable,city,cliIP,country,\ncp,dnsLookupTimeMSec,edgeAttempts,edgeIP,errorCode,fileSizeBucket,lastByte,latency,maxAgeSec,objSize,originContentLen,\noverheadBytes,proto,queryStr,range,referer,reqEndTimeMSec,reqHost,reqId,reqMethod,reqPath,reqTimeSec,rspContentLen,securityRules,\nserverCountry,state,statusCode,streamId,tlsOverheadTimeMSec,tlsVersion,totalBytes,transferTimeMSec,turnAroundTimeMSec,\nuncompressedSize,version,xForwardedFor\nfrom ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nLIMIT 100\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - rawlogs - ${__user.login}'",
+              "refId": "A",
+              "selectedFormat": 4
+            }
+          ],
+          "title": "Raw Logs",
+          "type": "logs"
+        }
+      ],
+      "title": "Raw Logs",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 17,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "avg_edgeDNSLookupTime"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "ms"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 4,
+            "x": 0,
+            "y": 25
+          },
+          "id": 18,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    countIf(Edge_DNSLookupTime>0) as count,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+              "refId": "A"
+            }
+          ],
+          "title": "# Edge DNS Lookups",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 4,
+            "x": 4,
+            "y": 25
+          },
+          "id": 26,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    avg(Edge_DNSLookupTime) Edge_DNSLookupTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+              "refId": "A"
+            }
+          ],
+          "title": "Edge_DNSLookupTime (average)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 4,
+            "x": 8,
+            "y": 25
+          },
+          "id": 19,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    avg(Edge_RequestEndTime) Edge_RequestEndTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+              "refId": "A"
+            }
+          ],
+          "title": "Edge_RequestEndTime (average)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 3,
+            "x": 12,
+            "y": 25
+          },
+          "id": 22,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    count(Edge_TurnAroundTime) as count_EdgeTurnaroundTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nand Edge_TurnAroundTime>0\nGROUP BY time\n",
+              "refId": "A"
+            }
+          ],
+          "title": "# Edge_TurnAroundTime (count)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 4,
+            "x": 15,
+            "y": 25
+          },
+          "id": 20,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    avg(Edge_TurnAroundTime) Edge_TurnAroundTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   ( reqTimeSec  >= $__fromTime AND reqTimeSec <= $__toTime ) \nGROUP BY time\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Edge_TurnAroundTime (average)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "count"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 80
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Edge_IP"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 150
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 5,
+            "x": 19,
+            "y": 25
+          },
+          "id": 21,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    Edge_IP,\n    count(*) as count\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY Edge_IP\nORDER BY count DESC\nlimit 20\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Edge_IP",
+          "type": "table"
+        }
+      ],
+      "title": "Edge Info (from Breadcrumbs)",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
+      "id": 6,
+      "panels": [],
+      "title": "Origin Info (from Breadcrumbs)",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Origin_DNS_Lookup"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 26
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "avg",
+                  "alias": "Origin DNS Lookup",
+                  "column": "Origin_DNSLookupTime"
+                }
+              ],
+              "columns": [
+                {
+                  "name": "Origin_DNSLookupTime"
+                }
+              ],
+              "database": "Akamai_Dashboard_Development",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "reqTimeSec",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "reqTimeSec",
+                      "name": "reqTimeSec",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [],
+              "limit": 100,
+              "mode": "aggregate",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.4",
+          "queryType": "table",
+          "rawSql": "SELECT \n    avg(Origin_DNSLookupTime) Origin_DNS_Lookup,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+          "refId": "A"
+        }
+      ],
+      "title": "# Origin_DNSLookupTime ",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 26
+      },
+      "id": 27,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "avg",
+                  "alias": "Origin DNS Lookup",
+                  "column": "Origin_DNSLookupTime"
+                }
+              ],
+              "columns": [
+                {
+                  "name": "Origin_DNSLookupTime"
+                }
+              ],
+              "database": "Akamai_Dashboard_Development",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "reqTimeSec",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "reqTimeSec",
+                      "name": "reqTimeSec",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [],
+              "limit": 100,
+              "mode": "aggregate",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.4",
+          "queryType": "table",
+          "rawSql": "SELECT \n    avg(Origin_DNSLookupTime) Origin_DNS_Lookup,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+          "refId": "A"
+        }
+      ],
+      "title": "Origin_DNSLookupTime (average)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 8,
+        "y": 26
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "avg",
+                  "alias": "Origin DNS Lookup",
+                  "column": "Origin_DNSLookupTime"
+                }
+              ],
+              "columns": [
+                {
+                  "name": "Origin_DNSLookupTime"
+                }
+              ],
+              "database": "Akamai_Dashboard_Development",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "reqTimeSec",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "reqTimeSec",
+                      "name": "reqTimeSec",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [],
+              "limit": 100,
+              "mode": "aggregate",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.4",
+          "queryType": "table",
+          "rawSql": "SELECT \n    avg(Origin_RequestEndTime) Origin_RequestEndTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+          "refId": "A"
+        }
+      ],
+      "title": "Origin_RequestEndTime (average)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 12,
+        "y": 26
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "avg",
+                  "alias": "Origin DNS Lookup",
+                  "column": "Origin_DNSLookupTime"
+                }
+              ],
+              "columns": [
+                {
+                  "name": "Origin_DNSLookupTime"
+                }
+              ],
+              "database": "Akamai_Dashboard_Development",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "reqTimeSec",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "reqTimeSec",
+                      "name": "reqTimeSec",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [],
+              "limit": 100,
+              "mode": "aggregate",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.4",
+          "queryType": "table",
+          "rawSql": "SELECT \n    avg(Origin_TurnAroundTime) Origin_TurnAroundTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   ( reqTimeSec  >= $__fromTime AND reqTimeSec <= $__toTime ) \nGROUP BY time\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Origin_TurnAroundTime (average)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 15,
+        "y": 26
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "avg",
+                  "alias": "Origin DNS Lookup",
+                  "column": "Origin_DNSLookupTime"
+                }
+              ],
+              "columns": [
+                {
+                  "name": "Origin_DNSLookupTime"
+                }
+              ],
+              "database": "Akamai_Dashboard_Development",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "reqTimeSec",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "reqTimeSec",
+                      "name": "reqTimeSec",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [],
+              "limit": 100,
+              "mode": "aggregate",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.4",
+          "queryType": "table",
+          "rawSql": "SELECT \n    countIf(Origin_TurnAroundTime,Origin_TurnAroundTime>0) /countIf(Edge_TurnAroundTime,Edge_TurnAroundTime>0 ) as percent_origin_requests,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\n",
+          "refId": "A"
+        }
+      ],
+      "title": "% Requests with Origin Request",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Origin_IP"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 151
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 19,
+        "y": 26
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "avg",
+                  "alias": "Origin DNS Lookup",
+                  "column": "Origin_DNSLookupTime"
+                }
+              ],
+              "columns": [
+                {
+                  "name": "Origin_DNSLookupTime"
+                }
+              ],
+              "database": "Akamai_Dashboard_Development",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "reqTimeSec",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "restrictToFields": [
+                    {
+                      "label": "reqTimeSec",
+                      "name": "reqTimeSec",
+                      "picklistValues": [],
+                      "type": "DateTime"
+                    }
+                  ],
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [],
+              "limit": 100,
+              "mode": "aggregate",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.4",
+          "queryType": "table",
+          "rawSql": "SELECT \n    Origin_IP,\n    count(*) as count\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY Origin_IP\nORDER BY count DESC\nlimit 20\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Origin IP",
+      "type": "table"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 5,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "-",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 0,
+            "y": 27
+          },
+          "id": 7,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    avg(Parent_DNSLookupTime) Parent_DNSLookupTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+              "refId": "A"
+            }
+          ],
+          "title": "Parent_DNSLookupTime (average)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 5,
+            "y": 27
+          },
+          "id": 10,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    avg(Parent_RequestEndTime) Parent_RequestEndTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+              "refId": "A"
+            }
+          ],
+          "title": "Parent_RequestEndTime (average)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 10,
+            "y": 27
+          },
+          "id": 9,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    avg(Parent_TurnAroundTime) Parent_TurnAroundTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+              "refId": "A"
+            }
+          ],
+          "title": "Parent_TurnAroundTime (average)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 15,
+            "y": 27
+          },
+          "id": 24,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    countIf(Parent_TurnAroundTime,Parent_TurnAroundTime>0)/countIf(Edge_TurnAroundTime,Edge_TurnAroundTime>0),\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\n",
+              "refId": "A"
+            }
+          ],
+          "title": "% Requests with Parent Request",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Origin_IP"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 101
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Parent_IP"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 116
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 19,
+            "y": 27
+          },
+          "id": 11,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    Parent_IP,\n    count(*) as count\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY Parent_IP\nORDER BY count DESC\nlimit 20\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Parent_IP",
+          "type": "table"
+        }
+      ],
+      "title": "Parent Info (from Breadcrumbs)",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "id": 12,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "-",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 0,
+            "y": 28
+          },
+          "id": 13,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    avg(Peer_DNSLookupTime) Peer_DNSLookupTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+              "refId": "A"
+            }
+          ],
+          "title": "Peer_DNSLookupTime (average)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "-",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 5,
+            "y": 28
+          },
+          "id": 14,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    avg(Peer_RequestEndTime) Peer_RequestEndTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+              "refId": "A"
+            }
+          ],
+          "title": "Peer_RequestEndTime (average)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "-",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 10,
+            "y": 28
+          },
+          "id": 15,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    avg(Peer_TurnAroundTime) Peer_TurnAroundTime,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\nLIMIT 100",
+              "refId": "A"
+            }
+          ],
+          "title": "Peer_TurnAroundTime (average)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "-",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 15,
+            "y": 28
+          },
+          "id": 25,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    countIf(Peer_TurnAroundTime,Peer_TurnAroundTime>0)/ countIf(Edge_TurnAroundTime,Edge_TurnAroundTime>0) as percentWithPeerRequest,\n    $__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY time\n",
+              "refId": "A"
+            }
+          ],
+          "title": "% Requests with Peer Request",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Origin_IP"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 101
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Parent_IP"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 116
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 19,
+            "y": 28
+          },
+          "id": 16,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "10.4.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+              },
+              "editorType": "sql",
+              "format": 1,
+              "meta": {
+                "builderOptions": {
+                  "aggregates": [
+                    {
+                      "aggregateType": "avg",
+                      "alias": "Origin DNS Lookup",
+                      "column": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "columns": [
+                    {
+                      "name": "Origin_DNSLookupTime"
+                    }
+                  ],
+                  "database": "Akamai_Dashboard_Development",
+                  "filters": [
+                    {
+                      "condition": "AND",
+                      "filterType": "custom",
+                      "key": "reqTimeSec",
+                      "operator": "WITH IN DASHBOARD TIME RANGE",
+                      "restrictToFields": [
+                        {
+                          "label": "reqTimeSec",
+                          "name": "reqTimeSec",
+                          "picklistValues": [],
+                          "type": "DateTime"
+                        }
+                      ],
+                      "type": "datetime"
+                    }
+                  ],
+                  "groupBy": [],
+                  "limit": 100,
+                  "mode": "aggregate",
+                  "orderBy": [],
+                  "queryType": "table",
+                  "table": "logs"
+                }
+              },
+              "pluginVersion": "4.0.4",
+              "queryType": "table",
+              "rawSql": "SELECT \n    Peer_IP,\n    count(*) as count\nFROM ${ds2}\nWHERE   $__timeFilter(reqTimeSec) \nAND $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nAND $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost}})\nAND $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode}})\nAND $__conditionalAll(country in (${country:sqlstring}), ${country}})\nAND $__conditionalAll(cacheStatus in (${cacheStatus:sqlstring}), ${cacheStatus}})\nAND if ( empty('${pathLike:text}') , true, reqPath like '${pathLike}' )\nAND if ( empty('${reqId:text}') , true, reqId = '${reqId}' )\nGROUP BY Peer_IP\nORDER BY count DESC\nlimit 20\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Peer_IP",
+          "type": "table"
+        }
+      ],
+      "title": "Peer Info (from Breadcrumbs)",
+      "type": "row"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "PostNL_Group_IT.logs",
+          "value": "PostNL_Group_IT.logs"
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        },
+        "definition": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "ds2",
+        "options": [],
+        "query": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "Request ID",
+        "name": "reqId",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Turn Around Time",
+          "value": "turnAroundTimeMSec"
+        },
+        "description": "For Treemaps section, which timer should be shown?",
+        "hide": 0,
+        "includeAll": false,
+        "label": "TreeMaps Timer",
+        "multi": false,
+        "name": "metric",
+        "options": [
+          {
+            "selected": false,
+            "text": "Transfer Time",
+            "value": "transferTimeMSec"
+          },
+          {
+            "selected": true,
+            "text": "Turn Around Time",
+            "value": "turnAroundTimeMSec"
+          },
+          {
+            "selected": false,
+            "text": "DNS Time",
+            "value": "dnsLookupTimeMSec"
+          },
+          {
+            "selected": false,
+            "text": "Total Bytes",
+            "value": "totalBytes"
+          }
+        ],
+        "query": "Transfer Time : transferTimeMSec , Turn Around Time : turnAroundTimeMSec, DNS Time : dnsLookupTimeMSec, Total Bytes : totalBytes",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Average",
+          "value": "avg"
+        },
+        "description": "Aggregation type: Average, or a percentils",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "AggType",
+        "options": [
+          {
+            "selected": true,
+            "text": "Average",
+            "value": "avg"
+          },
+          {
+            "selected": false,
+            "text": "Median",
+            "value": "quantile(0.5)"
+          },
+          {
+            "selected": false,
+            "text": "P75",
+            "value": "quantile(0.75)"
+          },
+          {
+            "selected": false,
+            "text": "P90",
+            "value": "quantile(0.90)"
+          },
+          {
+            "selected": false,
+            "text": "P95",
+            "value": "quantile(0.95)"
+          },
+          {
+            "selected": false,
+            "text": "P99",
+            "value": "quantile(0.99)"
+          }
+        ],
+        "query": "Average : avg , Median :  quantile(0.5) , P75 : quantile(0.75) , P90 : quantile(0.90) , P95 : quantile(0.95) , P99 : quantile(0.99)",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        },
+        "definition": "select rspContentType \nfrom ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by rspContentType\norder by count (rspContentType) desc",
+        "description": "Content Type. Ordered by most common first. ",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Content Type",
+        "multi": true,
+        "name": "rspContentType",
+        "options": [],
+        "query": "select rspContentType \nfrom ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by rspContentType\norder by count (rspContentType) desc",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "productprijslokatie.postnl.nl",
+            ""
+          ],
+          "value": [
+            "productprijslokatie.postnl.nl",
+            ""
+          ]
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        },
+        "definition": "select reqHost from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by reqHost\norder by count (reqHost) desc",
+        "description": "Hostnames. Ordered most common first.",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Hostname",
+        "multi": true,
+        "name": "reqHost",
+        "options": [],
+        "query": "select reqHost from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by reqHost\norder by count (reqHost) desc",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "500"
+          ],
+          "value": [
+            "500"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        },
+        "definition": "select statusCode from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by statusCode\norder by count (statusCode) desc",
+        "description": "Status Codes. Ordered most common first.",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Status Code",
+        "multi": true,
+        "name": "statusCode",
+        "options": [],
+        "query": "select statusCode from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by statusCode\norder by count (statusCode) desc",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        },
+        "definition": "select country from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by country\norder by count (country) desc",
+        "description": "Countries. Ordered most common first.",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Country",
+        "multi": true,
+        "name": "country",
+        "options": [],
+        "query": "select country from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by country\norder by count (country) desc",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "d3d0bb53-5dfd-489a-a243-341a804a29a3"
+        },
+        "definition": "select cacheStatus from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by cacheStatus\norder by count (cacheStatus) desc",
+        "description": "Cache Status. Ordered most common first.",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Cache Status",
+        "multi": true,
+        "name": "cacheStatus",
+        "options": [],
+        "query": "select cacheStatus from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by cacheStatus\norder by count (cacheStatus) desc",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "description": "Path. Use % as wildcard.",
+        "hide": 0,
+        "label": "Path Like",
+        "name": "pathLike",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "2024-04-15T22:22:03.318Z",
+    "to": "2024-04-16T00:32:17.106Z"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Performance Analysis",
+  "uid": "c60c8057-7671-4557-bf75-5b84cb593781",
+  "version": 6,
+  "weekStart": ""
+}

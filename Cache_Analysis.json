@@ -1,0 +1,2136 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_HYDROLIX_- POSTNL_GROUP_IT",
+      "label": "Hydrolix - PostNL_Group_IT",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "grafana-clickhouse-datasource",
+      "pluginName": "ClickHouse"
+    },
+    {
+      "name": "VAR_SUMMARY",
+      "type": "constant",
+      "label": "summary",
+      "value": "akamai.summary",
+      "description": ""
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.4.1"
+    },
+    {
+      "type": "datasource",
+      "id": "grafana-clickhouse-datasource",
+      "name": "ClickHouse",
+      "version": "4.0.4"
+    },
+    {
+      "type": "panel",
+      "id": "logs",
+      "name": "Logs",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "marcusolsson-treemap-panel",
+      "name": "Treemap",
+      "version": "2.0.1"
+    },
+    {
+      "type": "panel",
+      "id": "piechart",
+      "name": "Pie chart",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "gnetId": 18453,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 28,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  count(*) as count \nFROM ${ds2}\nwhere $__timeFilter(reqTimeSec) \nAND $__conditionalAll( statusCode IN (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus IN (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod IN (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType IN (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode IN (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll(reqPath IN (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP IN (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA IN (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country IN (${country:sqlstring}), $country)\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Total Requests",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "offload"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 19,
+        "x": 5,
+        "y": 0
+      },
+      "id": 29,
+      "interval": "10m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  reqHost as hostname, \ncountIf(cacheStatus=1)/count(cacheStatus) as offload,\n$__timeInterval(reqTimeSec) as time\nFROM ${ds2}\nwhere $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus IN (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod IN (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType IN (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode IN (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll(reqPath IN (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP IN (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA IN (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country IN (${country:sqlstring}), $country)\ngroup by hostname, time\norder by time asc, hostname desc\n\n",
+          "refId": "Offload",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Offload by Hostname",
+      "transformations": [
+        {
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "multi"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "offload (.*)",
+            "renamePattern": "$1"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "offload"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 4
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT countIf(cacheStatus=1)/count(cacheStatus) as offload\nFROM ${ds2}\nwhere $__timeFilter(reqTimeSec) \nAND $__conditionalAll( statusCode IN (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus IN (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod IN (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType IN (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode IN (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll(reqPath IN (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP IN (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA IN (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country IN (${country:sqlstring}), $country)\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Overall Offload",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 27,
+      "panels": [],
+      "title": "Treemaps",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Offload rate broken out by content-type",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Offload by Resource Name",
+          "links": [
+            {
+              "title": "Filter to Hostname",
+              "url": "/d/${__dashboard.uid}/${__dashboard}?﻿var-reqHost=${__data.fields.Hostname:percentencode}&${__all_variables}&${__url_time_range}"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 0.2
+              },
+              {
+                "color": "red",
+                "value": 0.4
+              },
+              {
+                "color": "light-red",
+                "value": 0.6
+              },
+              {
+                "color": "dark-orange",
+                "value": 0.7
+              },
+              {
+                "color": "orange",
+                "value": 0.75
+              },
+              {
+                "color": "dark-yellow",
+                "value": 0.8
+              },
+              {
+                "color": "super-light-yellow",
+                "value": 0.85
+              },
+              {
+                "color": "green",
+                "value": 0.9
+              },
+              {
+                "color": "dark-green",
+                "value": 0.99
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "offloadRate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 17,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 3,
+      "options": {
+        "colorByField": "offloadRate",
+        "labelFields": [
+          "offloadRate"
+        ],
+        "sizeField": "count",
+        "textField": "Hostname",
+        "tiling": "treemapSquarify"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "elkjop",
+            "fields": [],
+            "filters": [],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "elkjop",
+              "fields": [],
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  \n  ifNull(reqHost,'-') as Hostname,\n  countIf(cacheStatus)/count(*) as offloadRate,\n  count(*) as count\nFROM ${ds2}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus IN (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod IN (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType IN (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode IN (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll(reqPath IN (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP IN (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA IN (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country IN (${country:sqlstring}), $country)\nGROUP BY Hostname \nORDER BY count desc\nlimit 200\n",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Offload by Hostname",
+      "type": "marcusolsson-treemap-panel"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Offload rate broken out by content-type",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Offload by Resource Name",
+          "links": [
+            {
+              "title": "Filter to Content Type",
+              "url": "/d/${__dashboard.uid}/${__dashboard}?﻿var-rspContentType=${__data.fields.ContentType:percentencode}&${__all_variables}&${__url_time_range}"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red"
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 0.2
+              },
+              {
+                "color": "red",
+                "value": 0.4
+              },
+              {
+                "color": "light-red",
+                "value": 0.6
+              },
+              {
+                "color": "dark-orange",
+                "value": 0.7
+              },
+              {
+                "color": "orange",
+                "value": 0.75
+              },
+              {
+                "color": "dark-yellow",
+                "value": 0.8
+              },
+              {
+                "color": "yellow",
+                "value": 0.85
+              },
+              {
+                "color": "green",
+                "value": 0.9
+              },
+              {
+                "color": "dark-green",
+                "value": 0.99
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "offloadRate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 18,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 23,
+      "options": {
+        "colorByField": "offloadRate",
+        "labelFields": [
+          "offloadRate"
+        ],
+        "sizeField": "count",
+        "textField": "ContentType",
+        "tiling": "treemapSquarify"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "elkjop",
+            "fields": [],
+            "filters": [],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "elkjop",
+              "fields": [],
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  \n  ifNull(rspContentType,'-') as ContentType,\n  1.0*sumIf(cacheStatus,cacheStatus=1)/count(*) as offloadRate,\n  count(*) as count\nFROM ${ds2}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus IN (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod IN (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType IN (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode IN (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll(reqPath IN (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP IN (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA IN (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country IN (${country:sqlstring}), $country)\nGROUP BY rspContentType \nORDER BY count desc\nlimit 200\n",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Offload by Content-Type",
+      "type": "marcusolsson-treemap-panel"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Number of request group by HTTP Status Code",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Offload by Resource Name",
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Open URL in new tab",
+              "url": "https://${__data.fields.url}"
+            },
+            {
+              "title": "Filter to this path",
+              "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqPath=${__data.fields.reqPath}&var-reqHost=${__data.fields.reqHost}&${__all_variables}"
+            },
+            {
+              "targetBlank": true,
+              "title": "Open in URL Analysis Dashboard",
+              "url": "/d/d772729f-216d-464d-9ac4-f8adbcfc5b09/url-analysis?var-pathLike=${__data.fields.reqPath}&var-reqHost=${__data.fields.reqHost}&${__url_time_range}"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red"
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 0.2
+              },
+              {
+                "color": "red",
+                "value": 0.4
+              },
+              {
+                "color": "light-red",
+                "value": 0.6
+              },
+              {
+                "color": "dark-orange",
+                "value": 0.7
+              },
+              {
+                "color": "orange",
+                "value": 0.75
+              },
+              {
+                "color": "dark-yellow",
+                "value": 0.8
+              },
+              {
+                "color": "yellow",
+                "value": 0.85
+              },
+              {
+                "color": "green",
+                "value": 0.9
+              },
+              {
+                "color": "green",
+                "value": 0.95
+              },
+              {
+                "color": "dark-green",
+                "value": 0.99
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "offloadRate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 24,
+        "x": 0,
+        "y": 44
+      },
+      "id": 22,
+      "options": {
+        "colorByField": "offloadRate",
+        "labelFields": [
+          "offloadRate"
+        ],
+        "sizeField": "count",
+        "textField": "url",
+        "tiling": "treemapSquarify"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "builderOptions": {
+            "database": "elkjop",
+            "fields": [],
+            "filters": [],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "database": "elkjop",
+              "fields": [],
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "table": "logs"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  \n  ifNull(concat(reqHost,reqPath),'-') as url,\n  /*  use this if the path might contain the word 'undefined': replaceOne(ifNull(concat(reqHost,reqPath),'-'),'undefined','undefine_d') as url, */\n  reqHost,\n  reqPath,\n  countIf(cacheStatus)/count(*) as offloadRate,\n  count(*) as count\nFROM ${ds2}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus IN (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod IN (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType IN (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode IN (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll(reqPath IN (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP IN (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA IN (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country IN (${country:sqlstring}), $country)\nGROUP BY url ,reqHost,reqPath\nORDER BY count desc\nlimit 500\n",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Offload by Resource",
+      "type": "marcusolsson-treemap-panel"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalPercentImprovement"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "transparent"
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": -10000
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": -0.8
+                    },
+                    {
+                      "color": "semi-dark-red",
+                      "value": -0.6
+                    },
+                    {
+                      "color": "red",
+                      "value": -0.4
+                    },
+                    {
+                      "color": "light-red",
+                      "value": -0.2
+                    },
+                    {
+                      "color": "super-light-red",
+                      "value": -0.1
+                    },
+                    {
+                      "color": "transparent",
+                      "value": 0
+                    },
+                    {
+                      "color": "super-light-green",
+                      "value": 0.1
+                    },
+                    {
+                      "color": "light-green",
+                      "value": 0.2
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.4
+                    },
+                    {
+                      "color": "semi-dark-green",
+                      "value": 0.6
+                    },
+                    {
+                      "color": "dark-green",
+                      "value": 0.8
+                    },
+                    {
+                      "color": "dark-green",
+                      "value": 1000
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cachedTurnAroundTime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              },
+              {
+                "id": "custom.width",
+                "value": 206
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "super-light-blue"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uncachedTurnAroundTime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "super-light-blue"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "super-light-blue"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalImprovement"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "transparent"
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": -10000
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": -120
+                    },
+                    {
+                      "color": "semi-dark-red",
+                      "value": -90
+                    },
+                    {
+                      "color": "red",
+                      "value": -60
+                    },
+                    {
+                      "color": "light-red",
+                      "value": -30
+                    },
+                    {
+                      "color": "super-light-red",
+                      "value": -0.1
+                    },
+                    {
+                      "color": "transparent",
+                      "value": 0
+                    },
+                    {
+                      "color": "super-light-green",
+                      "value": 0.1
+                    },
+                    {
+                      "color": "light-green",
+                      "value": 30
+                    },
+                    {
+                      "color": "green",
+                      "value": 60
+                    },
+                    {
+                      "color": "semi-dark-green",
+                      "value": 90
+                    },
+                    {
+                      "color": "dark-green",
+                      "value": 120
+                    },
+                    {
+                      "color": "dark-green",
+                      "value": 1000
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "url"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 377
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": true,
+                    "title": "Open resource in new tab",
+                    "url": "https://${__data.fields.url}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "Open URL Analysis Dashboard in new tab",
+                    "url": "/d/d772729f-216d-464d-9ac4-f8adbcfc5b09/url-analysis?var-pathLike=${__data.fields.reqPath}&var-reqHost=${__data.fields.reqHost}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cachedTransferTimeMSec"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "super-light-purple"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "offload"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 105
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "dark-red"
+                    },
+                    {
+                      "color": "red",
+                      "value": 0.6
+                    },
+                    {
+                      "color": "orange",
+                      "value": 0.7
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 0.8
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.9
+                    },
+                    {
+                      "color": "dark-green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "avgBytes"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              },
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uncachedTransferTimeMSec"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "super-light-purple"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "offload"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 64
+      },
+      "id": 24,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "count"
+          }
+        ]
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  \nconcat(reqHost,reqPath) as url,\ncount(*) as count,\ncountIf(cacheStatus)/count(*) as offload,\navg(totalBytes) as avgBytes,\n${aggregation}(turnAroundTimeMSec,cacheStatus) as cachedTurnAroundTime,\n${aggregation}(turnAroundTimeMSec, not cacheStatus) as uncachedTurnAroundTime,\n${aggregation}(transferTimeMSec,cacheStatus) as cachedTransferTimeMSec,\n${aggregation}(transferTimeMSec, not cacheStatus) as uncachedTransferTimeMSec,\n(uncachedTurnAroundTime-cachedTurnAroundTime)+(uncachedTransferTimeMSec-cachedTransferTimeMSec) as totalImprovement,\n(1-(cachedTurnAroundTime+cachedTransferTimeMSec)/(uncachedTurnAroundTime+uncachedTransferTimeMSec)) as totalPercentImprovement,\nreqHost,\nreqPath\nfrom ${ds2}\nwhere $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus IN (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod IN (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType IN (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode IN (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll(reqPath IN (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP IN (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA IN (${UA:sqlstring}), $UA)\nAND isNotNull(reqHost)\nAND $__conditionalAll(country IN (${country:sqlstring}), $country)\ngroup by url,reqHost,reqPath\norder by count desc \nLIMIT 200",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Caching Impact (${aggregation})",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 78
+      },
+      "id": 26,
+      "options": {
+        "displayLabels": [
+          "value",
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "first"
+          ],
+          "fields": "/^count$/",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  toString(statusCode),\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus IN (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod IN (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType IN (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode IN (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll(reqPath IN (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP IN (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA IN (${UA:sqlstring}), $UA)\nand cacheStatus=1\nGROUP by statusCode\norder by count desc\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Cached Status Codes",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 78
+      },
+      "id": 25,
+      "options": {
+        "displayLabels": [
+          "value",
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "first"
+          ],
+          "fields": "/^count$/",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  toString(statusCode),\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus IN (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod IN (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType IN (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode IN (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll(reqPath IN (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP IN (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA IN (${UA:sqlstring}), $UA)\nand cacheStatus=0\nGROUP by statusCode\norder by count desc\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Uncached Status Codes",
+      "type": "piechart"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 86
+      },
+      "id": 14,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "gridPos": {
+            "h": 16,
+            "w": 24,
+            "x": 0,
+            "y": 18
+          },
+          "id": 12,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+              },
+              "format": 2,
+              "meta": {
+                "builderOptions": {
+                  "fields": [],
+                  "limit": 100,
+                  "mode": "list"
+                }
+              },
+              "queryType": "sql",
+              "rawSql": "SELECT toString(statusCode), UA,accLang,billingRegion,bytes,cacheStatus,cacheable,city,cliIP,country,\ncp,dnsLookupTimeMSec,edgeAttempts,edgeIP,errorCode,fileSizeBucket,lastByte,latency,maxAgeSec,objSize,originContentLen,\noverheadBytes,proto,queryStr,range,referer,reqEndTimeMSec,reqHost,reqId,reqMethod,reqPath,reqTimeSec,rspContentLen,rspContentType,securityRules,\nserverCountry,state,statusCode,streamId,tlsOverheadTimeMSec,tlsVersion,totalBytes,transferTimeMSec,turnAroundTimeMSec,\nuncompressedSize,version,xForwardedFor\nfrom ${ds2}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode IN (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost IN (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus IN (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod IN (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType IN (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode IN (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll(reqPath IN (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP IN (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA IN (${UA:sqlstring}), $UA)\nORDER BY reqTimeSec\nLIMIT 100\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - rawlogs - ${__user.login}'",
+              "refId": "A",
+              "selectedFormat": 2
+            }
+          ],
+          "title": "Raw Logs",
+          "type": "logs"
+        }
+      ],
+      "title": "Raw Logs",
+      "type": "row"
+    }
+  ],
+  "refresh": "",
+  "revision": 1,
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+        },
+        "definition": "SELECT reqHost FROM ${ds2} WHERE $__timeFilter(reqTimeSec) GROUP BY reqHost ORDER BY COUNT() DESC LIMIT 50",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Hostname",
+        "multi": true,
+        "name": "reqHost",
+        "options": [],
+        "query": "SELECT reqHost FROM ${ds2} WHERE $__timeFilter(reqTimeSec) GROUP BY reqHost ORDER BY COUNT() DESC LIMIT 50",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "Path",
+        "name": "reqPath",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+        },
+        "definition": "SELECT rspContentType FROM ${ds2} WHERE $__timeFilter(reqTimeSec) GROUP BY rspContentType ORDER BY COUNT() DESC LIMIT 50",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Content Type",
+        "multi": true,
+        "name": "rspContentType",
+        "options": [],
+        "query": "SELECT rspContentType FROM ${ds2} WHERE $__timeFilter(reqTimeSec) GROUP BY rspContentType ORDER BY COUNT() DESC LIMIT 50",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "hide": 0,
+        "includeAll": true,
+        "label": "HTTP Status Code",
+        "multi": true,
+        "name": "statusCode",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "200",
+            "value": "200"
+          },
+          {
+            "selected": false,
+            "text": "201",
+            "value": "201"
+          },
+          {
+            "selected": false,
+            "text": "202",
+            "value": "202"
+          },
+          {
+            "selected": false,
+            "text": "204",
+            "value": "204"
+          },
+          {
+            "selected": false,
+            "text": "205",
+            "value": "205"
+          },
+          {
+            "selected": false,
+            "text": "206",
+            "value": "206"
+          },
+          {
+            "selected": false,
+            "text": "301",
+            "value": "301"
+          },
+          {
+            "selected": false,
+            "text": "302",
+            "value": "302"
+          },
+          {
+            "selected": false,
+            "text": "304",
+            "value": "304"
+          },
+          {
+            "selected": false,
+            "text": "307",
+            "value": "307"
+          },
+          {
+            "selected": false,
+            "text": "308",
+            "value": "308"
+          },
+          {
+            "selected": false,
+            "text": "400",
+            "value": "400"
+          },
+          {
+            "selected": false,
+            "text": "401",
+            "value": "401"
+          },
+          {
+            "selected": false,
+            "text": "403",
+            "value": "403"
+          },
+          {
+            "selected": false,
+            "text": "404",
+            "value": "404"
+          },
+          {
+            "selected": false,
+            "text": "405",
+            "value": "405"
+          },
+          {
+            "selected": false,
+            "text": "406",
+            "value": "406"
+          },
+          {
+            "selected": false,
+            "text": "408",
+            "value": "408"
+          },
+          {
+            "selected": false,
+            "text": "409",
+            "value": "409"
+          },
+          {
+            "selected": false,
+            "text": "410",
+            "value": "410"
+          },
+          {
+            "selected": false,
+            "text": "411",
+            "value": "411"
+          },
+          {
+            "selected": false,
+            "text": "412",
+            "value": "412"
+          },
+          {
+            "selected": false,
+            "text": "413",
+            "value": "413"
+          },
+          {
+            "selected": false,
+            "text": "414",
+            "value": "414"
+          },
+          {
+            "selected": false,
+            "text": "415",
+            "value": "415"
+          },
+          {
+            "selected": false,
+            "text": "416",
+            "value": "416"
+          },
+          {
+            "selected": false,
+            "text": "417",
+            "value": "417"
+          },
+          {
+            "selected": false,
+            "text": "421",
+            "value": "421"
+          },
+          {
+            "selected": false,
+            "text": "425",
+            "value": "425"
+          },
+          {
+            "selected": false,
+            "text": "428",
+            "value": "428"
+          },
+          {
+            "selected": false,
+            "text": "429",
+            "value": "429"
+          },
+          {
+            "selected": false,
+            "text": "431",
+            "value": "431"
+          },
+          {
+            "selected": false,
+            "text": "451",
+            "value": "451"
+          },
+          {
+            "selected": false,
+            "text": "500",
+            "value": "500"
+          },
+          {
+            "selected": false,
+            "text": "501",
+            "value": "501"
+          },
+          {
+            "selected": false,
+            "text": "502",
+            "value": "502"
+          },
+          {
+            "selected": false,
+            "text": "503",
+            "value": "503"
+          },
+          {
+            "selected": false,
+            "text": "504",
+            "value": "504"
+          },
+          {
+            "selected": false,
+            "text": "505",
+            "value": "505"
+          },
+          {
+            "selected": false,
+            "text": "506",
+            "value": "506"
+          },
+          {
+            "selected": false,
+            "text": "511",
+            "value": "511"
+          }
+        ],
+        "query": "200,201,202,204,205,206,301,302,304,307,308,400,401,403,404,405,406,408,409,410,411,412,413,414,415,416,417,421,425,428,429,431,451,500,501,502,503,504,505,506,511",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "hide": 0,
+        "includeAll": true,
+        "label": "Cache Status",
+        "multi": false,
+        "name": "cacheStatus",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "true",
+            "value": "1"
+          },
+          {
+            "selected": false,
+            "text": "false",
+            "value": "0"
+          }
+        ],
+        "query": "true : 1, false : 0",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+        },
+        "definition": "SELECT reqMethod FROM ${ds2} WHERE $__timeFilter(reqTimeSec) GROUP BY reqMethod ORDER BY COUNT() DESC LIMIT 50",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Method",
+        "multi": true,
+        "name": "reqMethod",
+        "options": [],
+        "query": "SELECT reqMethod FROM ${ds2} WHERE $__timeFilter(reqTimeSec) GROUP BY reqMethod ORDER BY COUNT() DESC LIMIT 50",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "User Agent",
+        "name": "UA",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+        },
+        "definition": "SELECT errorCode FROM ${ds2} WHERE $__timeFilter(reqTimeSec) GROUP BY errorCode ORDER BY COUNT() DESC LIMIT 50",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Error Code",
+        "multi": true,
+        "name": "errorCode",
+        "options": [],
+        "query": "SELECT errorCode FROM ${ds2} WHERE $__timeFilter(reqTimeSec) GROUP BY errorCode ORDER BY COUNT() DESC LIMIT 50",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "Client IP",
+        "name": "cliIP",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+        },
+        "definition": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "ds2",
+        "options": [],
+        "query": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+        },
+        "definition": "select country from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by country order by count(country) desc\nlimit 250",
+        "description": "",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Country",
+        "multi": true,
+        "name": "country",
+        "options": [],
+        "query": "select country from ${ds2}\nwhere $__timeFilter(reqTimeSec)\ngroup by country order by count(country) desc\nlimit 250",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "hide": 2,
+        "name": "summary",
+        "query": "${VAR_SUMMARY}",
+        "skipUrlSync": false,
+        "type": "constant",
+        "current": {
+          "value": "${VAR_SUMMARY}",
+          "text": "${VAR_SUMMARY}",
+          "selected": false
+        },
+        "options": [
+          {
+            "value": "${VAR_SUMMARY}",
+            "text": "${VAR_SUMMARY}",
+            "selected": false
+          }
+        ]
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "P75",
+          "value": "quantileIf(0.75)"
+        },
+        "description": "In the Caching Impact panel, how should performance data be measured? (Average, Median, P75, P90 etc)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Aggregation",
+        "multi": false,
+        "name": "aggregation",
+        "options": [
+          {
+            "selected": false,
+            "text": "average",
+            "value": "avgIf"
+          },
+          {
+            "selected": false,
+            "text": "Median",
+            "value": "quantileIf(0.5)"
+          },
+          {
+            "selected": true,
+            "text": "P75",
+            "value": "quantileIf(0.75)"
+          },
+          {
+            "selected": false,
+            "text": "P90",
+            "value": "quantileIf(0.90)"
+          },
+          {
+            "selected": false,
+            "text": "P95",
+            "value": "quantileIf(0.95)"
+          }
+        ],
+        "query": "average : avgIf , Median : quantileIf(0.5) , P75 : quantileIf(0.75) , P90 : quantileIf(0.90) , P95 : quantileIf(0.95)",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now-1m"
+  },
+  "timepicker": {
+    "hidden": false,
+    "nowDelay": "1m"
+  },
+  "timezone": "",
+  "title": "Cache Analysis Treemap",
+  "uid": "e34820d2-e36b-4cfd-9570-8bd44ca92eea",
+  "version": 2,
+  "weekStart": ""
+}
