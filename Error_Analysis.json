@@ -599,7 +599,7 @@
       "type": "marcusolsson-treemap-panel"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -607,1191 +607,1194 @@
         "y": 21
       },
       "id": 53,
-      "panels": [
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-          },
-          "description": "Overall count of unique userIDs where a userID is first match in the queryString on regex: /id=(ac\\d+)/",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "fixedColor": "green",
-                "mode": "fixed"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "short"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 0,
-            "y": 7
-          },
-          "id": 22,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "textMode": "value"
-          },
-          "pluginVersion": "10.1.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "expand": true,
-              "format": 1,
-              "meta": {
-                "builderOptions": {
-                  "fields": [],
-                  "limit": 100,
-                  "mode": "list"
-                }
-              },
-              "queryType": "sql",
-              "rawSql": "SELECT  count(distinct(reqPath)) \nFROM  ${ds2} \nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\nLIMIT 100",
-              "refId": "A",
-              "selectedFormat": 4
-            },
-            {
-              "builderOptions": {
-                "database": "akamai",
-                "fields": [
-                  "cmcd_session_id"
-                ],
-                "filters": [
-                  {
-                    "condition": "AND",
-                    "filterType": "custom",
-                    "key": "reqTimeSec",
-                    "operator": "WITH IN DASHBOARD TIME RANGE",
-                    "restrictToFields": [
-                      {
-                        "label": "reqTimeSec",
-                        "name": "reqTimeSec",
-                        "picklistValues": [],
-                        "type": "DateTime64(3)"
-                      }
-                    ],
-                    "type": "datetime"
-                  }
-                ],
-                "limit": 100,
-                "mode": "list",
-                "orderBy": [],
-                "table": "logs"
-              },
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "hide": true,
-              "queryType": "builder",
-              "rawSql": "SELECT \"cmcd_session_id\" FROM \"akamai\".\"logs\" WHERE   ( reqTimeSec  >= $__fromTime AND reqTimeSec <= $__toTime ) LIMIT 100",
-              "refId": "B"
-            }
-          ],
-          "title": "Unique Resources",
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-          },
-          "description": "Number of requests per streaming format",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                }
-              },
-              "links": [
-                {
-                  "targetBlank": false,
-                  "title": "Filter to this status code",
-                  "url": "/d/${__dashboard.uid}﻿﻿/﻿﻿${__dashboard}﻿﻿?var-statusCode=${__data.fields.toString(statusCode)}&﻿﻿${reqHost:queryparam}﻿﻿&﻿﻿${country:queryparam}﻿﻿&﻿﻿${rspContentType:queryparam}﻿﻿&﻿﻿${pathLike:queryparam}﻿﻿&﻿﻿${treemapCells:queryparam}&${minErrorRate:queryparam}&${project:queryparam}&${userID:queryparam}&${channel:queryparam}&${errorCode:queryparam}&${__url_time_range}"
-                }
-              ],
-              "mappings": []
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "count"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "short"
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 6,
-            "x": 6,
-            "y": 7
-          },
-          "id": 51,
-          "options": {
-            "displayLabels": [
-              "name"
-            ],
-            "legend": {
-              "displayMode": "list",
-              "placement": "right",
-              "showLegend": false,
-              "values": [
-                "percent"
-              ]
-            },
-            "pieType": "pie",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "10.1.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "expand": true,
-              "format": 1,
-              "meta": {
-                "builderOptions": {
-                  "fields": [],
-                  "limit": 100,
-                  "mode": "list"
-                }
-              },
-              "queryType": "sql",
-              "rawSql": "SELECT toString(statusCode),\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by statusCode\norder by count desc\nLIMIT 100",
-              "refId": "A",
-              "selectedFormat": 4
-            }
-          ],
-          "title": "Status Code",
-          "type": "piechart"
-        },
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-          },
-          "description": "Error codes per request",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                }
-              },
-              "links": [
-                {
-                  "targetBlank": false,
-                  "title": "",
-                  "url": "/d/${__dashboard.uid}﻿﻿/﻿﻿${__dashboard}﻿﻿/?﻿﻿var-errorCode=${__data.fields.toString(errorCode)}&${reqHost:queryparam}﻿﻿&﻿﻿${country:queryparam}﻿﻿&﻿﻿${rspContentType:queryparam}﻿﻿&﻿﻿${pathLike:queryparam}﻿﻿&﻿﻿${treemapCells:queryparam}&${minErrorRate:queryparam}&${project:queryparam}&${userID:queryparam}&${channel:queryparam}&${statusCode:queryparam}&${__url_time_range}"
-                }
-              ],
-              "mappings": [],
-              "noValue": "(none)"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "count"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "short"
-                  }
-                ]
-              },
-              {
-                "__systemRef": "hideSeriesFrom",
-                "matcher": {
-                  "id": "byNames",
-                  "options": {
-                    "mode": "exclude",
-                    "names": [
-                      "count",
-                      "ERR_FIRST_BYTE_TIMEOUT|before_resp_hdrs",
-                      "ERR_CLIENT_ABORT|general"
-                    ],
-                    "prefix": "All except:",
-                    "readOnly": true
-                  }
-                },
-                "properties": [
-                  {
-                    "id": "custom.hideFrom",
-                    "value": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": true
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 7
-          },
-          "id": 52,
-          "options": {
-            "displayLabels": [
-              "name",
-              "percent"
-            ],
-            "legend": {
-              "displayMode": "list",
-              "placement": "right",
-              "showLegend": true,
-              "values": [
-                "percent"
-              ]
-            },
-            "pieType": "pie",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "10.1.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "expand": true,
-              "format": 1,
-              "meta": {
-                "builderOptions": {
-                  "fields": [],
-                  "limit": 100,
-                  "mode": "list"
-                }
-              },
-              "queryType": "sql",
-              "rawSql": "SELECT toString(errorCode),\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by errorCode\norder by count desc\nLIMIT 100",
-              "refId": "A",
-              "selectedFormat": 4
-            }
-          ],
-          "title": "Error Codes",
-          "type": "piechart"
-        },
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-          },
-          "description": "Overall count of unique Client IPs in this time period",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "fixedColor": "green",
-                "mode": "fixed"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "short"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 0,
-            "y": 11
-          },
-          "id": 24,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "textMode": "value"
-          },
-          "pluginVersion": "10.1.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "expand": true,
-              "format": 1,
-              "meta": {
-                "builderOptions": {
-                  "fields": [],
-                  "limit": 100,
-                  "mode": "list"
-                }
-              },
-              "queryType": "sql",
-              "rawSql": "SELECT  count(distinct(cliIP)) \nFROM  ${ds2} \nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\nLIMIT 100",
-              "refId": "A",
-              "selectedFormat": 4
-            },
-            {
-              "builderOptions": {
-                "database": "akamai",
-                "fields": [
-                  "cmcd_session_id"
-                ],
-                "filters": [
-                  {
-                    "condition": "AND",
-                    "filterType": "custom",
-                    "key": "reqTimeSec",
-                    "operator": "WITH IN DASHBOARD TIME RANGE",
-                    "restrictToFields": [
-                      {
-                        "label": "reqTimeSec",
-                        "name": "reqTimeSec",
-                        "picklistValues": [],
-                        "type": "DateTime64(3)"
-                      }
-                    ],
-                    "type": "datetime"
-                  }
-                ],
-                "limit": 100,
-                "mode": "list",
-                "orderBy": [],
-                "table": "logs"
-              },
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "hide": true,
-              "queryType": "builder",
-              "rawSql": "SELECT \"cmcd_session_id\" FROM \"akamai\".\"logs\" WHERE   ( reqTimeSec  >= $__fromTime AND reqTimeSec <= $__toTime ) LIMIT 100",
-              "refId": "B"
-            }
-          ],
-          "title": "Unique IPs Overall",
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-          },
-          "description": "Number of requests per streaming format",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                }
-              },
-              "links": [
-                {
-                  "targetBlank": false,
-                  "title": "Filter to this Country",
-                  "url": "/d/${__dashboard.uid}﻿﻿/﻿﻿${__dashboard}﻿﻿/?﻿﻿var-country=${__data.fields.country}&${reqHost:queryparam}﻿﻿&﻿﻿${rspContentType:queryparam}﻿﻿&﻿﻿${pathLike:queryparam}﻿﻿&﻿﻿${treemapCells:queryparam}&${minErrorRate:queryparam}&${project:queryparam}&${userID:queryparam}&${channel:queryparam}&${errorCode:queryparam}&${statusCode:queryparam}&${__url_time_range}"
-                }
-              ],
-              "mappings": []
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "count"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "short"
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 15
-          },
-          "id": 34,
-          "options": {
-            "displayLabels": [
-              "name"
-            ],
-            "legend": {
-              "displayMode": "list",
-              "placement": "right",
-              "showLegend": false,
-              "values": [
-                "percent"
-              ]
-            },
-            "pieType": "pie",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "10.1.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "expand": true,
-              "format": 1,
-              "meta": {
-                "builderOptions": {
-                  "fields": [],
-                  "limit": 100,
-                  "mode": "list"
-                }
-              },
-              "queryType": "sql",
-              "rawSql": "SELECT country,\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by country\norder by count desc\nLIMIT 100",
-              "refId": "A",
-              "selectedFormat": 4
-            }
-          ],
-          "title": "Countries",
-          "type": "piechart"
-        },
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-          },
-          "description": "Number of requess per channel",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                }
-              },
-              "links": [
-                {
-                  "targetBlank": false,
-                  "title": "Full Link",
-                  "url": "/d/${__dashboard.uid}﻿﻿﻿/﻿﻿﻿${__dashboard}﻿﻿﻿/?﻿﻿var-channel=${__data.fields.channel}&﻿${reqHost:queryparam}﻿﻿﻿&﻿﻿﻿${country:queryparam}﻿﻿﻿&﻿﻿﻿${rspContentType:queryparam}﻿﻿﻿&﻿﻿﻿${pathLike:queryparam}﻿﻿﻿&﻿﻿﻿${treemapCells:queryparam}﻿&﻿${minErrorRate:queryparam}﻿&﻿${project:queryparam}﻿&﻿${userID:queryparam}﻿&﻿${errorCode:queryparam}﻿&﻿${statusCode:queryparam}﻿&﻿${__url_time_range}"
-                }
-              ],
-              "mappings": []
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "count"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "short"
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 15
-          },
-          "id": 32,
-          "options": {
-            "displayLabels": [
-              "name"
-            ],
-            "legend": {
-              "displayMode": "list",
-              "placement": "right",
-              "showLegend": true,
-              "values": [
-                "percent"
-              ]
-            },
-            "pieType": "pie",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "10.1.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "expand": true,
-              "format": 1,
-              "meta": {
-                "builderOptions": {
-                  "fields": [],
-                  "limit": 100,
-                  "mode": "list"
-                }
-              },
-              "queryType": "sql",
-              "rawSql": "SELECT reqPath,\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by reqPath\norder by count desc\nLIMIT 100",
-              "refId": "A",
-              "selectedFormat": 4
-            }
-          ],
-          "title": "Resources",
-          "type": "piechart"
-        },
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-          },
-          "description": "Number of requests per streaming format",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                }
-              },
-              "links": [
-                {
-                  "targetBlank": true,
-                  "title": "Filter to this content type",
-                  "url": "/d/${__dashboard.uid}﻿﻿/﻿﻿${__dashboard}﻿﻿/?﻿﻿var-rspContentType=${__data.fields.rspContentType}&${reqHost:queryparam}﻿﻿&﻿﻿${country:queryparam}﻿﻿&﻿﻿﻿﻿${pathLike:queryparam}﻿﻿&﻿﻿${treemapCells:queryparam}&${minErrorRate:queryparam}&${project:queryparam}&${userID:queryparam}&${channel:queryparam}&${errorCode:queryparam}&${statusCode:queryparam}&${__url_time_range}"
-                }
-              ],
-              "mappings": []
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "count"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "short"
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 23
-          },
-          "id": 35,
-          "options": {
-            "displayLabels": [
-              "name"
-            ],
-            "legend": {
-              "displayMode": "list",
-              "placement": "right",
-              "showLegend": true,
-              "values": [
-                "percent"
-              ]
-            },
-            "pieType": "pie",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "10.1.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "expand": true,
-              "format": 1,
-              "meta": {
-                "builderOptions": {
-                  "fields": [],
-                  "limit": 100,
-                  "mode": "list"
-                }
-              },
-              "queryType": "sql",
-              "rawSql": "SELECT rspContentType,\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by rspContentType\norder by count desc\nLIMIT 100",
-              "refId": "A",
-              "selectedFormat": 4
-            }
-          ],
-          "title": "Content Types",
-          "type": "piechart"
-        },
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-          },
-          "description": "Number of requess per channel",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "auto"
-                },
-                "inspect": false
-              },
-              "links": [
-                {
-                  "targetBlank": false,
-                  "title": "Full Link",
-                  "url": "/d/${__dashboard.uid}﻿﻿﻿/﻿﻿﻿${__dashboard}﻿﻿﻿/?﻿﻿var-channel=${__data.fields.channel}&﻿${reqHost:queryparam}﻿﻿﻿&﻿﻿﻿${country:queryparam}﻿﻿﻿&﻿﻿﻿${rspContentType:queryparam}﻿﻿﻿&﻿﻿﻿${pathLike:queryparam}﻿﻿﻿&﻿﻿﻿${treemapCells:queryparam}﻿&﻿${minErrorRate:queryparam}﻿&﻿${project:queryparam}﻿&﻿${userID:queryparam}﻿&﻿${errorCode:queryparam}﻿&﻿${statusCode:queryparam}﻿&﻿${__url_time_range}"
-                }
-              ],
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "count"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "short"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "referer"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 631
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 23
-          },
-          "id": 63,
-          "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
-              ],
-              "show": false
-            },
-            "showHeader": true,
-            "sortBy": []
-          },
-          "pluginVersion": "10.1.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "expand": true,
-              "format": 1,
-              "meta": {
-                "builderOptions": {
-                  "fields": [],
-                  "limit": 100,
-                  "mode": "list"
-                }
-              },
-              "queryType": "sql",
-              "rawSql": "SELECT referer,\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by referer\norder by count desc\nLIMIT 100",
-              "refId": "A",
-              "selectedFormat": 4
-            }
-          ],
-          "title": "Referer",
-          "type": "table"
-        }
-      ],
+      "panels": [],
       "title": "Piecharts",
       "type": "row"
     },
     {
-      "collapsed": true,
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Overall count of unique userIDs where a userID is first match in the queryString on regex: /id=(ac\\d+)/",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 22
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  count(distinct(reqPath)) \nFROM  ${ds2} \nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        },
+        {
+          "builderOptions": {
+            "database": "akamai",
+            "fields": [
+              "cmcd_session_id"
+            ],
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "reqTimeSec",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "reqTimeSec",
+                    "name": "reqTimeSec",
+                    "picklistValues": [],
+                    "type": "DateTime64(3)"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "hide": true,
+          "queryType": "builder",
+          "rawSql": "SELECT \"cmcd_session_id\" FROM \"akamai\".\"logs\" WHERE   ( reqTimeSec  >= $__fromTime AND reqTimeSec <= $__toTime ) LIMIT 100",
+          "refId": "B"
+        }
+      ],
+      "title": "Unique Resources",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Number of requests per streaming format",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Filter to this status code",
+              "url": "/d/${__dashboard.uid}﻿﻿/﻿﻿${__dashboard}﻿﻿?var-statusCode=${__data.fields.toString(statusCode)}&﻿﻿${reqHost:queryparam}﻿﻿&﻿﻿${country:queryparam}﻿﻿&﻿﻿${rspContentType:queryparam}﻿﻿&﻿﻿${pathLike:queryparam}﻿﻿&﻿﻿${treemapCells:queryparam}&${minErrorRate:queryparam}&${project:queryparam}&${userID:queryparam}&${channel:queryparam}&${errorCode:queryparam}&${__url_time_range}"
+            }
+          ],
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 22
+      },
+      "id": 51,
+      "options": {
+        "displayLabels": [
+          "name"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": false,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT toString(statusCode),\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by statusCode\norder by count desc\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Status Code",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Error codes per request",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "",
+              "url": "/d/${__dashboard.uid}﻿﻿/﻿﻿${__dashboard}﻿﻿/?﻿﻿var-errorCode=${__data.fields.toString(errorCode)}&${reqHost:queryparam}﻿﻿&﻿﻿${country:queryparam}﻿﻿&﻿﻿${rspContentType:queryparam}﻿﻿&﻿﻿${pathLike:queryparam}﻿﻿&﻿﻿${treemapCells:queryparam}&${minErrorRate:queryparam}&${project:queryparam}&${userID:queryparam}&${channel:queryparam}&${statusCode:queryparam}&${__url_time_range}"
+            }
+          ],
+          "mappings": [],
+          "noValue": "(none)"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "count",
+                  "ERR_FIRST_BYTE_TIMEOUT|before_resp_hdrs",
+                  "ERR_CLIENT_ABORT|general"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "id": 52,
+      "options": {
+        "displayLabels": [
+          "name",
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT toString(errorCode),\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by errorCode\norder by count desc\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Error Codes",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Overall count of unique Client IPs in this time period",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 26
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  count(distinct(cliIP)) \nFROM  ${ds2} \nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        },
+        {
+          "builderOptions": {
+            "database": "akamai",
+            "fields": [
+              "cmcd_session_id"
+            ],
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "reqTimeSec",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "restrictToFields": [
+                  {
+                    "label": "reqTimeSec",
+                    "name": "reqTimeSec",
+                    "picklistValues": [],
+                    "type": "DateTime64(3)"
+                  }
+                ],
+                "type": "datetime"
+              }
+            ],
+            "limit": 100,
+            "mode": "list",
+            "orderBy": [],
+            "table": "logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "hide": true,
+          "queryType": "builder",
+          "rawSql": "SELECT \"cmcd_session_id\" FROM \"akamai\".\"logs\" WHERE   ( reqTimeSec  >= $__fromTime AND reqTimeSec <= $__toTime ) LIMIT 100",
+          "refId": "B"
+        }
+      ],
+      "title": "Unique IPs Overall",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Number of requests per streaming format",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Filter to this Country",
+              "url": "/d/${__dashboard.uid}﻿﻿/﻿﻿${__dashboard}﻿﻿/?﻿﻿var-country=${__data.fields.country}&${reqHost:queryparam}﻿﻿&﻿﻿${rspContentType:queryparam}﻿﻿&﻿﻿${pathLike:queryparam}﻿﻿&﻿﻿${treemapCells:queryparam}&${minErrorRate:queryparam}&${project:queryparam}&${userID:queryparam}&${channel:queryparam}&${errorCode:queryparam}&${statusCode:queryparam}&${__url_time_range}"
+            }
+          ],
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "id": 34,
+      "options": {
+        "displayLabels": [
+          "name"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": false,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT country,\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by country\norder by count desc\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Countries",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Number of requess per channel",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Full Link",
+              "url": "/d/${__dashboard.uid}﻿﻿﻿/﻿﻿﻿${__dashboard}﻿﻿﻿/?﻿﻿var-channel=${__data.fields.channel}&﻿${reqHost:queryparam}﻿﻿﻿&﻿﻿﻿${country:queryparam}﻿﻿﻿&﻿﻿﻿${rspContentType:queryparam}﻿﻿﻿&﻿﻿﻿${pathLike:queryparam}﻿﻿﻿&﻿﻿﻿${treemapCells:queryparam}﻿&﻿${minErrorRate:queryparam}﻿&﻿${project:queryparam}﻿&﻿${userID:queryparam}﻿&﻿${errorCode:queryparam}﻿&﻿${statusCode:queryparam}﻿&﻿${__url_time_range}"
+            }
+          ],
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 32,
+      "options": {
+        "displayLabels": [
+          "name"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT reqPath,\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by reqPath\norder by count desc\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Resources",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Number of requests per streaming format",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Filter to this content type",
+              "url": "/d/${__dashboard.uid}﻿﻿/﻿﻿${__dashboard}﻿﻿/?﻿﻿var-rspContentType=${__data.fields.rspContentType}&${reqHost:queryparam}﻿﻿&﻿﻿${country:queryparam}﻿﻿&﻿﻿﻿﻿${pathLike:queryparam}﻿﻿&﻿﻿${treemapCells:queryparam}&${minErrorRate:queryparam}&${project:queryparam}&${userID:queryparam}&${channel:queryparam}&${errorCode:queryparam}&${statusCode:queryparam}&${__url_time_range}"
+            }
+          ],
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 38
+      },
+      "id": 35,
+      "options": {
+        "displayLabels": [
+          "name"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT rspContentType,\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by rspContentType\norder by count desc\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Content Types",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "Number of requess per channel",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Full Link",
+              "url": "/d/${__dashboard.uid}﻿﻿﻿/﻿﻿﻿${__dashboard}﻿﻿﻿/?﻿﻿var-channel=${__data.fields.channel}&﻿${reqHost:queryparam}﻿﻿﻿&﻿﻿﻿${country:queryparam}﻿﻿﻿&﻿﻿﻿${rspContentType:queryparam}﻿﻿﻿&﻿﻿﻿${pathLike:queryparam}﻿﻿﻿&﻿﻿﻿${treemapCells:queryparam}﻿&﻿${minErrorRate:queryparam}﻿&﻿${project:queryparam}﻿&﻿${userID:queryparam}﻿&﻿${errorCode:queryparam}﻿&﻿${statusCode:queryparam}﻿&﻿${__url_time_range}"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "referer"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 631
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 38
+      },
+      "id": 63,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT referer,\ncount(*) as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\ngroup by referer\norder by count desc\nLIMIT 100",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Referer",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 46
       },
       "id": 66,
-      "panels": [
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-          },
-          "description": "",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "links": [
-                {
-                  "targetBlank": false,
-                  "title": "Filter to this resource",
-                  "url": "/d/${__dashboard.uid}﻿﻿﻿/﻿﻿﻿${__dashboard}﻿﻿﻿/?﻿﻿var-${treeMapGroupBy}=${__data.fields.item}&${reqHost:queryparam}﻿﻿﻿&﻿﻿﻿${country:queryparam}﻿﻿﻿&﻿﻿﻿${rspContentType:queryparam}﻿﻿﻿﻿﻿﻿&﻿﻿﻿${treemapCells:queryparam}﻿&﻿${minErrorRate:queryparam}﻿﻿&﻿${errorCode:queryparam}﻿&﻿${statusCode:queryparam}﻿&${__url_time_range}&${treeMapGroupBy:queryparam}"
-                }
-              ],
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "dark-green"
-                  },
-                  {
-                    "color": "semi-dark-green",
-                    "value": 0.1
-                  },
-                  {
-                    "color": "green",
-                    "value": 0.2
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 0.25
-                  },
-                  {
-                    "color": "semi-dark-yellow",
-                    "value": 0.35
-                  },
-                  {
-                    "color": "dark-yellow",
-                    "value": 0.45
-                  },
-                  {
-                    "color": "orange",
-                    "value": 0.5
-                  },
-                  {
-                    "color": "semi-dark-orange",
-                    "value": 0.6
-                  },
-                  {
-                    "color": "dark-orange",
-                    "value": 0.7
-                  },
-                  {
-                    "color": "red",
-                    "value": 0.75
-                  },
-                  {
-                    "color": "semi-dark-red",
-                    "value": 0.85
-                  },
-                  {
-                    "color": "dark-red",
-                    "value": 0.95
-                  }
-                ]
-              }
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "count"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "short"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "percentError"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "percentunit"
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 11,
-            "w": 15,
-            "x": 0,
-            "y": 8
-          },
-          "id": 64,
-          "links": [],
-          "options": {
-            "colorByField": "percentError",
-            "labelFields": [
-              "percentError"
-            ],
-            "sizeField": "count",
-            "textField": "item",
-            "tiling": "treemapSquarify"
-          },
-          "pluginVersion": "10.1.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "expand": true,
-              "format": 1,
-              "hide": false,
-              "meta": {
-                "builderOptions": {
-                  "fields": [],
-                  "limit": 100,
-                  "mode": "list"
-                }
-              },
-              "queryType": "sql",
-              "rawSql": "SELECT  \n  coalesce(${treeMapGroupBy},'-') as item,\n  /*If path may contain the word 'undefined' then use this:   replaceOne(ifNull(concat(reqHost,reqPath),'-'),'undefined','undefine_d') as reqPath, */\n  count(*)  as count,\n  countIf(securityRules like '${secRulesLike}')/count(*) as percentError\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\nGROUP by item\nhaving percentError>=${minErrorRate}\norder by count desc\nLIMIT ${treemapCells}",
-              "refId": "A",
-              "selectedFormat": 4
-            }
-          ],
-          "title": "Security Rate for top ${treemapCells} ${treeMapGroupBy} (Excludes error rates below ${minErrorRate})",
-          "transformations": [],
-          "type": "marcusolsson-treemap-panel"
-        },
-        {
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-          },
-          "description": "",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "auto"
-                },
-                "inspect": false
-              },
-              "links": [
-                {
-                  "targetBlank": false,
-                  "title": "Filter to this resource",
-                  "url": "/d/${__dashboard.uid}﻿﻿﻿/﻿﻿﻿${__dashboard}﻿﻿﻿/?﻿﻿var-${secRulesLike}=${__data.fields.securityRules}&${reqHost:queryparam}﻿﻿﻿&﻿﻿﻿${country:queryparam}﻿﻿﻿&﻿﻿﻿${rspContentType:queryparam}﻿﻿﻿﻿﻿﻿&﻿﻿﻿${treemapCells:queryparam}﻿&﻿${minErrorRate:queryparam}﻿﻿&﻿${errorCode:queryparam}﻿&﻿${statusCode:queryparam}﻿&${__url_time_range}&${treeMapGroupBy:queryparam}"
-                }
-              ],
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "dark-green"
-                  },
-                  {
-                    "color": "semi-dark-green",
-                    "value": 0.1
-                  },
-                  {
-                    "color": "green",
-                    "value": 0.2
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 0.25
-                  },
-                  {
-                    "color": "semi-dark-yellow",
-                    "value": 0.35
-                  },
-                  {
-                    "color": "dark-yellow",
-                    "value": 0.45
-                  },
-                  {
-                    "color": "orange",
-                    "value": 0.5
-                  },
-                  {
-                    "color": "semi-dark-orange",
-                    "value": 0.6
-                  },
-                  {
-                    "color": "dark-orange",
-                    "value": 0.7
-                  },
-                  {
-                    "color": "red",
-                    "value": 0.75
-                  },
-                  {
-                    "color": "semi-dark-red",
-                    "value": 0.85
-                  },
-                  {
-                    "color": "dark-red",
-                    "value": 0.95
-                  }
-                ]
-              }
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "count"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "short"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "percentError"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "percentunit"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "securityRules"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 292
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 11,
-            "w": 9,
-            "x": 15,
-            "y": 8
-          },
-          "id": 67,
-          "links": [],
-          "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
-              ],
-              "show": false
-            },
-            "showHeader": true,
-            "sortBy": []
-          },
-          "pluginVersion": "10.1.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-clickhouse-datasource",
-                "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
-              },
-              "expand": true,
-              "format": 1,
-              "hide": false,
-              "meta": {
-                "builderOptions": {
-                  "fields": [],
-                  "limit": 100,
-                  "mode": "list"
-                }
-              },
-              "queryType": "sql",
-              "rawSql": "SELECT  \n  securityRules,\n  /*If path may contain the word 'undefined' then use this:   replaceOne(ifNull(concat(reqHost,reqPath),'-'),'undefined','undefine_d') as reqPath, */\n  count(*)  as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand if (empty('${secRulesLike}'),true,securityRules like '${secRulesLike}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\nGROUP by securityRules\norder by count desc\nLIMIT ${treemapCells}",
-              "refId": "A",
-              "selectedFormat": 4
-            }
-          ],
-          "title": "Top Security Rules",
-          "transformations": [],
-          "type": "table"
-        }
-      ],
+      "panels": [],
       "title": "Security Flags Treemap",
       "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Filter to this resource",
+              "url": "/d/${__dashboard.uid}﻿﻿﻿/﻿﻿﻿${__dashboard}﻿﻿﻿/?﻿﻿var-${treeMapGroupBy}=${__data.fields.item}&${reqHost:queryparam}﻿﻿﻿&﻿﻿﻿${country:queryparam}﻿﻿﻿&﻿﻿﻿${rspContentType:queryparam}﻿﻿﻿﻿﻿﻿&﻿﻿﻿${treemapCells:queryparam}﻿&﻿${minErrorRate:queryparam}﻿﻿&﻿${errorCode:queryparam}﻿&﻿${statusCode:queryparam}﻿&${__url_time_range}&${treeMapGroupBy:queryparam}"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "semi-dark-green",
+                "value": 0.1
+              },
+              {
+                "color": "green",
+                "value": 0.2
+              },
+              {
+                "color": "yellow",
+                "value": 0.25
+              },
+              {
+                "color": "semi-dark-yellow",
+                "value": 0.35
+              },
+              {
+                "color": "dark-yellow",
+                "value": 0.45
+              },
+              {
+                "color": "orange",
+                "value": 0.5
+              },
+              {
+                "color": "semi-dark-orange",
+                "value": 0.6
+              },
+              {
+                "color": "dark-orange",
+                "value": 0.7
+              },
+              {
+                "color": "red",
+                "value": 0.75
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 0.85
+              },
+              {
+                "color": "dark-red",
+                "value": 0.95
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "percentError"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 15,
+        "x": 0,
+        "y": 47
+      },
+      "id": 64,
+      "options": {
+        "colorByField": "percentError",
+        "labelFields": [
+          "percentError"
+        ],
+        "sizeField": "count",
+        "textField": "item",
+        "tiling": "treemapSquarify"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "hide": false,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  \n  coalesce(${treeMapGroupBy},'-') as item,\n  /*If path may contain the word 'undefined' then use this:   replaceOne(ifNull(concat(reqHost,reqPath),'-'),'undefined','undefine_d') as reqPath, */\n  count(*)  as count,\n  countIf(securityRules like '${secRulesLike}')/count(*) as percentError\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\nGROUP by item\nhaving percentError>=${minErrorRate}\norder by count desc\nLIMIT ${treemapCells}",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Security Rate for top ${treemapCells} ${treeMapGroupBy} (Excludes error rates below ${minErrorRate})",
+      "type": "marcusolsson-treemap-panel"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Filter to this resource",
+              "url": "/d/${__dashboard.uid}﻿﻿﻿/﻿﻿﻿${__dashboard}﻿﻿﻿/?﻿﻿var-${secRulesLike}=${__data.fields.securityRules}&${reqHost:queryparam}﻿﻿﻿&﻿﻿﻿${country:queryparam}﻿﻿﻿&﻿﻿﻿${rspContentType:queryparam}﻿﻿﻿﻿﻿﻿&﻿﻿﻿${treemapCells:queryparam}﻿&﻿${minErrorRate:queryparam}﻿﻿&﻿${errorCode:queryparam}﻿&﻿${statusCode:queryparam}﻿&${__url_time_range}&${treeMapGroupBy:queryparam}"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "semi-dark-green",
+                "value": 0.1
+              },
+              {
+                "color": "green",
+                "value": 0.2
+              },
+              {
+                "color": "yellow",
+                "value": 0.25
+              },
+              {
+                "color": "semi-dark-yellow",
+                "value": 0.35
+              },
+              {
+                "color": "dark-yellow",
+                "value": 0.45
+              },
+              {
+                "color": "orange",
+                "value": 0.5
+              },
+              {
+                "color": "semi-dark-orange",
+                "value": 0.6
+              },
+              {
+                "color": "dark-orange",
+                "value": 0.7
+              },
+              {
+                "color": "red",
+                "value": 0.75
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 0.85
+              },
+              {
+                "color": "dark-red",
+                "value": 0.95
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "percentError"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "securityRules"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 292
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 9,
+        "x": 15,
+        "y": 47
+      },
+      "id": 67,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
+          },
+          "expand": true,
+          "format": 1,
+          "hide": false,
+          "meta": {
+            "builderOptions": {
+              "fields": [],
+              "limit": 100,
+              "mode": "list"
+            }
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT  \n  securityRules,\n  /*If path may contain the word 'undefined' then use this:   replaceOne(ifNull(concat(reqHost,reqPath),'-'),'undefined','undefine_d') as reqPath, */\n  count(*)  as count\nFROM  ${ds2}\nwhere $__timeFilter(reqTimeSec)\nand $__conditionalAll(reqHost in (${reqHost:sqlstring}), ${reqHost})\nand $__conditionalAll(reqPath in (${reqPath:sqlstring}), ${reqPath})\nand $__conditionalAll(queryStr in (${queryStr:sqlstring}), ${queryStr})\nand $__conditionalAll(country in (${country:sqlstring}), ${country})\nand $__conditionalAll(state in (${state:sqlstring}), ${state})\nand $__conditionalAll(city in (${city:sqlstring}), ${city})\nand $__conditionalAll(rspContentType in (${rspContentType:sqlstring}), ${rspContentType})\nand $__conditionalAll(statusCode in (${statusCode:sqlstring}), ${statusCode})\nand $__conditionalAll(errorCode in (${errorCode:sqlstring}), ${errorCode})\nand if (empty('${referer}'),true,referer like '${referer}')\nand if (empty('${secRulesLike}'),true,securityRules like '${secRulesLike}')\nand $__conditionalAll(UA in (${UA:sqlstring}), ${UA})\nGROUP by securityRules\norder by count desc\nLIMIT ${treemapCells}",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Top Security Rules",
+      "type": "table"
     },
     {
       "collapsed": true,
@@ -1799,7 +1802,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 58
       },
       "id": 61,
       "panels": [
@@ -1867,7 +1870,7 @@
           "uid": "${DS_HYDROLIX_- POSTNL_GROUP_IT}"
         },
         "definition": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
-        "hide": 0,
+        "hide": 2,
         "includeAll": false,
         "multi": false,
         "name": "ds2",
@@ -2236,13 +2239,13 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Error Analysis",
   "uid": "f06bc0ea-faaa-46b9-94f2-0df468874298",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
