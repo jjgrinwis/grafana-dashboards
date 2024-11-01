@@ -1,0 +1,2365 @@
+{
+  "__inputs": [
+    {
+      "name": "",
+      "label": "Hydrolix - ",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "grafana-clickhouse-datasource",
+      "pluginName": "ClickHouse"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.4.1"
+    },
+    {
+      "type": "datasource",
+      "id": "grafana-clickhouse-datasource",
+      "name": "ClickHouse",
+      "version": "4.0.6"
+    },
+    {
+      "type": "panel",
+      "id": "logs",
+      "name": "Logs",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "piechart",
+      "name": "Pie chart",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "gnetId": 18453,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "count()",
+                  "rspContentType",
+                  "application/rss+xml",
+                  "application/javascript"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^count\\(\\)$/",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 100,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "SELECT\ncount(),\nrspContentType\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND rspContentType IS not NULL\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\nAND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\nAND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\nAND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\nAND ( uncompressedSize IS  NULL )\nGROUP BY rspContentType ORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - content_type - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Request Per Content Type Without Compression",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "count()",
+                  "rspContentType",
+                  "application/rss+xml",
+                  "application/javascript"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^count\\(\\)$/",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 100,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "SELECT\ncount(),\nrspContentType\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND rspContentType IS not NULL\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\nAND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\nAND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\nAND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\nAND ( uncompressedSize IS NOT NULL )\nGROUP BY rspContentType ORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - content_type - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Request Per Content Type Compreseed Files",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "description": "Diferencia entre total bytes y el obj comprimido",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 28,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "elkjop",
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "SELECT $__timeInterval(reqTimeSec) as time,\nsum(totalBytes) as Total_Bytes,\nsum((bytes)) as Total_Content_Bytes_Served_in_Response_Body\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\nAND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\nAND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\nAND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\nAND ( uncompressedSize IS  NULL )\nGROUP BY time ORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - bytes - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Total Traffic of Uncompressed Files",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "description": "Diferencia entre total bytes y el obj comprimido",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 26,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "elkjop",
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "SELECT $__timeInterval(reqTimeSec) as time,\nsum(totalBytes) as Total_Bytes,\nsum((bytes)) as Total_Content_Bytes_Served_in_Response_Body,\nsum(totalBytes- (bytes )) as Difference_in_Bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\nAND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\nAND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\nAND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\nAND ( uncompressedSize IS NOT NULL )\nGROUP BY time ORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - bytes - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Total Traffic of Compressed Files",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "description": "Diference between the reported billed traffic and Content length delivered",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 32,
+      "options": {
+        "displayLabels": [],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": [
+            "percent",
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "elkjop",
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "SELECT $__timeInterval(reqTimeSec) as time,\nsum(totalBytes) as Total_bytes,\nsum((bytes)) as Total_Content_Bytes_Server_in_Response_Body,\nsum(totalBytes- (bytes)) as Difference_in_bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\nAND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\nAND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\nAND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\nAND ( uncompressedSize IS  NULL )\nGROUP BY time ORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - bytes - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Traffic Without Compression",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "description": "Diference between the reported billed traffic and traffic delivered",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 31,
+      "options": {
+        "displayLabels": [],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": [
+            "percent",
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "elkjop",
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "SELECT $__timeInterval(reqTimeSec) as time,\nsum(totalBytes) as Total_bytes,\nsum((bytes)) as Total_Content_Bytes_Server_in_Response_Body,\nsum(totalBytes- (bytes )) as Difference_in_bytes\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\nAND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\nAND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\nAND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\nAND ( uncompressedSize IS NOT NULL )\nGROUP BY time ORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - bytes - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Compressed Files Traffic",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "description": "Diferencia entre total bytes y el obj comprimido",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 25,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "elkjop",
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "SELECT $__timeInterval(reqTimeSec) as time,\nsum(totalBytes) as Total_Bytes,\nsum((bytes)) as Total_Content_Bytes_Served_in_Response_Body\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\nAND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\nAND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\nAND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\nAND( uncompressedSize IS  NULL )\nGROUP BY time ORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - bytes - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Traffic Without Compressed Files",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "description": "Diferencia entre total bytes y el obj comprimido",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "elkjop",
+              "filters": [],
+              "limit": 100,
+              "mode": "list",
+              "orderBy": [],
+              "queryType": "table",
+              "table": "logs"
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "SELECT $__timeInterval(reqTimeSec) as time,\nsum(totalBytes) as Total_Bytes,\nsum((bytes)) as Total_Content_Bytes_Served_in_Response_Body\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec)\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\nAND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\nAND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\nAND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\nAND( uncompressedSize IS NOT NULL )\nGROUP BY time ORDER BY time\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - bytes - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Compressed Files Traffic",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count()"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reqPath"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filter",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqPath=${__data.fields.reqPath:percentencode}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 100,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "WITH (\n        SELECT topK(50)(reqPath)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\n        AND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\n        AND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\n        AND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\n        AND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\n        AND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\n        AND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\n        AND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\n        AND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\n        AND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\n        AND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\n        AND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\n        AND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\n        AND ( uncompressedSize IS NULL )\n    ) AS top_50_reqPath\nSELECT\n    count(),\n    reqPath\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_reqPath, reqPath)\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\n        AND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\n        AND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\n        AND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\n        AND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\n        AND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\n        AND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\n        AND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\n        AND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\n        AND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\n        AND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\n        AND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\n        AND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\nGROUP BY reqPath\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Top 50 Path (not Compressed Files)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count()"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reqPath"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filter",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-reqPath=${__data.fields.reqPath:percentencode}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      },
+      "id": 33,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 100,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "WITH (\n        SELECT topK(50)(reqPath)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\n        AND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\n        AND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\n        AND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\n        AND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\n        AND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\n        AND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\n        AND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\n        AND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\n        AND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\n        AND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\n        AND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\n        AND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\n        AND ( uncompressedSize IS NOT NULL )\n    ) AS top_50_reqPath\nSELECT\n    count(),\n    reqPath\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_reqPath, reqPath)\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\n        AND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\n        AND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\n        AND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\n        AND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\n        AND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\n        AND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\n        AND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\n        AND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\n        AND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\n        AND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\n        AND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\n        AND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\n        AND ( uncompressedSize IS NOT NULL )\nGROUP BY reqPath\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topPath - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Top 50 Path (Compressed Files)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count()"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "UA"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filter",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-UA=${__data.fields.UA:percentencode}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "id": 35,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 100,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "WITH (\n        SELECT topK(50)(UA)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\n        AND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\n        AND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\n        AND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\n        AND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\n        AND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\n        AND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\n        AND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\n        AND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\n        AND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\n        AND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\n        AND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\n        AND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\n        AND ( uncompressedSize IS  NULL )\n    ) AS top_50_UA\nSELECT\n    count(),\n    UA\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_UA, UA)\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\n        AND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\n        AND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\n        AND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\n        AND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\n        AND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\n        AND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\n        AND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\n        AND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\n        AND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\n        AND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\n        AND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\n        AND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\n        AND ( uncompressedSize IS  NULL )\nGROUP BY UA\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topUA - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Top 50 User Agent",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count()"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "UA"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filter",
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?var-UA=${__data.fields.UA:percentencode}&${__all_variables}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 40
+      },
+      "id": 36,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 100,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "WITH (\n        SELECT topK(50)(UA)\n        FROM ${table}\n        WHERE $__timeFilter(reqTimeSec)\n        AND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\n        AND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\n        AND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\n        AND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\n        AND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\n        AND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\n        AND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\n        AND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\n        AND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\n        AND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\n        AND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\n        AND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\n        AND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\n        AND ( uncompressedSize IS NOT NULL )\n    ) AS top_50_UA\nSELECT\n    count(),\n    UA\nFROM ${table}\nWHERE $__timeFilter(reqTimeSec) AND has(top_50_UA, UA)\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\n        AND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\n        AND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\n        AND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\n        AND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\n        AND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\n        AND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\n        AND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\n        AND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\n        AND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\n        AND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\n        AND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\n        AND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\n        AND ( uncompressedSize IS  NOT NULL )\nGROUP BY UA\nORDER BY count() DESC\nSETTINGS hdx_query_max_execution_time=120, hdx_query_admin_comment='akamai - topUA - ${__user.login}'",
+          "refId": "A"
+        }
+      ],
+      "title": "Top 50 User Agent",
+      "type": "table"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 48
+      },
+      "id": 14,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${}"
+          },
+          "gridPos": {
+            "h": 16,
+            "w": 24,
+            "x": 0,
+            "y": 49
+          },
+          "id": 12,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "${}"
+              },
+              "editorType": "sql",
+              "format": 2,
+              "meta": {
+                "builderOptions": {
+                  "columns": [],
+                  "database": "",
+                  "limit": 100,
+                  "mode": "list",
+                  "queryType": "table",
+                  "table": ""
+                }
+              },
+              "pluginVersion": "4.0.6",
+              "queryType": "logs",
+              "rawSql": "WITH (\n    WITH 1000 AS LATEST\n    SELECT [min($__fromTime), max($__toTime)] AS min_max\n    FROM (\n        SELECT\n            *,\n            any(running_row_count) OVER (ORDER BY min_timestamp DESC ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING) AS prev_running_row_count,\n            (running_row_count > LATEST) AND (prev_running_row_count < LATEST) AS is_boundary_row\n        FROM (\n            SELECT\n                min_timestamp,\n                max_timestamp,\n                sum(rows) OVER (ORDER BY min_timestamp DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_row_count\n            FROM ${catalog}\n            ORDER BY max_timestamp DESC, min_timestamp ASC\n        )\n        ORDER BY max_timestamp DESC, min_timestamp ASC\n    )\n    WHERE (running_row_count < LATEST) OR is_boundary_row\n) AS min_max\n\nSELECT statusCode::String, * EXCEPT (statusCode, unknown)\nFROM ${table}\nWHERE reqTimeSec BETWEEN min_max[1] AND min_max[2]\nAND $__conditionalAll( statusCode ${AND_statusCode} (${statusCode:sqlstring}), $statusCode)\nAND $__conditionalAll( reqHost ${AND_reqHost} (${reqHost:sqlstring}), $reqHost)\nAND $__conditionalAll( cacheStatus ${AND_cacheStatus} (${cacheStatus:sqlstring}), $cacheStatus)\nAND $__conditionalAll( reqMethod ${AND_reqMethod} (${reqMethod:sqlstring}), $reqMethod)\nAND $__conditionalAll( rspContentType ${AND_rspContentType} (${rspContentType:sqlstring}), $rspContentType)\nAND $__conditionalAll( errorCode ${AND_errorCode} (${errorCode:sqlstring}), $errorCode)\nAND $__conditionalAll( transferTimeMSec >= ${transferTimeMSec_percentile}, $transferTimeMSec_percentile)\nAND $__conditionalAll(${metric_name} ${metric_filter} ${metric_value}, $metric_filter)\nAND $__conditionalAll(reqPath ${AND_reqPath} (${reqPath:sqlstring}), $reqPath)\nAND $__conditionalAll(cliIP ${AND_cliIP} (${cliIP:sqlstring}), $cliIP)\nAND $__conditionalAll(UA ${AND_UA} (${UA:sqlstring}), $UA)\nAND $__conditionalAll(country ${AND_country} (${country:sqlstring}), $country)\nAND $__conditionalAll(cp ${AND_cp} (${cp:sqlstring}), $cp)\nORDER BY reqTimeSec DESC\nLIMIT 1000\nSETTINGS hdx_query_max_execution_time=60, hdx_query_admin_comment='akamai - rawlogs - ${__user.login}'",
+              "refId": "A"
+            }
+          ],
+          "title": "Raw Logs",
+          "type": "logs"
+        }
+      ],
+      "title": "Raw Logs",
+      "type": "row"
+    }
+  ],
+  "refresh": "",
+  "revision": 1,
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_statusCode",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "hide": 0,
+        "includeAll": true,
+        "label": "HTTP Status Code",
+        "multi": true,
+        "name": "statusCode",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "200",
+            "value": "200"
+          },
+          {
+            "selected": false,
+            "text": "201",
+            "value": "201"
+          },
+          {
+            "selected": false,
+            "text": "202",
+            "value": "202"
+          },
+          {
+            "selected": false,
+            "text": "204",
+            "value": "204"
+          },
+          {
+            "selected": false,
+            "text": "205",
+            "value": "205"
+          },
+          {
+            "selected": false,
+            "text": "206",
+            "value": "206"
+          },
+          {
+            "selected": false,
+            "text": "301",
+            "value": "301"
+          },
+          {
+            "selected": false,
+            "text": "302",
+            "value": "302"
+          },
+          {
+            "selected": false,
+            "text": "304",
+            "value": "304"
+          },
+          {
+            "selected": false,
+            "text": "307",
+            "value": "307"
+          },
+          {
+            "selected": false,
+            "text": "308",
+            "value": "308"
+          },
+          {
+            "selected": false,
+            "text": "400",
+            "value": "400"
+          },
+          {
+            "selected": false,
+            "text": "401",
+            "value": "401"
+          },
+          {
+            "selected": false,
+            "text": "403",
+            "value": "403"
+          },
+          {
+            "selected": false,
+            "text": "404",
+            "value": "404"
+          },
+          {
+            "selected": false,
+            "text": "405",
+            "value": "405"
+          },
+          {
+            "selected": false,
+            "text": "406",
+            "value": "406"
+          },
+          {
+            "selected": false,
+            "text": "408",
+            "value": "408"
+          },
+          {
+            "selected": false,
+            "text": "409",
+            "value": "409"
+          },
+          {
+            "selected": false,
+            "text": "410",
+            "value": "410"
+          },
+          {
+            "selected": false,
+            "text": "411",
+            "value": "411"
+          },
+          {
+            "selected": false,
+            "text": "412",
+            "value": "412"
+          },
+          {
+            "selected": false,
+            "text": "413",
+            "value": "413"
+          },
+          {
+            "selected": false,
+            "text": "414",
+            "value": "414"
+          },
+          {
+            "selected": false,
+            "text": "415",
+            "value": "415"
+          },
+          {
+            "selected": false,
+            "text": "416",
+            "value": "416"
+          },
+          {
+            "selected": false,
+            "text": "417",
+            "value": "417"
+          },
+          {
+            "selected": false,
+            "text": "421",
+            "value": "421"
+          },
+          {
+            "selected": false,
+            "text": "425",
+            "value": "425"
+          },
+          {
+            "selected": false,
+            "text": "428",
+            "value": "428"
+          },
+          {
+            "selected": false,
+            "text": "429",
+            "value": "429"
+          },
+          {
+            "selected": false,
+            "text": "431",
+            "value": "431"
+          },
+          {
+            "selected": false,
+            "text": "451",
+            "value": "451"
+          },
+          {
+            "selected": false,
+            "text": "500",
+            "value": "500"
+          },
+          {
+            "selected": false,
+            "text": "501",
+            "value": "501"
+          },
+          {
+            "selected": false,
+            "text": "502",
+            "value": "502"
+          },
+          {
+            "selected": false,
+            "text": "503",
+            "value": "503"
+          },
+          {
+            "selected": false,
+            "text": "504",
+            "value": "504"
+          },
+          {
+            "selected": false,
+            "text": "505",
+            "value": "505"
+          },
+          {
+            "selected": false,
+            "text": "506",
+            "value": "506"
+          },
+          {
+            "selected": false,
+            "text": "511",
+            "value": "511"
+          }
+        ],
+        "query": "200,201,202,204,205,206,301,302,304,307,308,400,401,403,404,405,406,408,409,410,411,412,413,414,415,416,417,421,425,428,429,431,451,500,501,502,503,504,505,506,511",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_cacheStatus",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "hide": 0,
+        "includeAll": true,
+        "label": "Cache Status",
+        "multi": false,
+        "name": "cacheStatus",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "true",
+            "value": "1"
+          },
+          {
+            "selected": false,
+            "text": "false",
+            "value": "0"
+          }
+        ],
+        "query": "true : 1, false : 0",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_reqHost",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "SELECT arrayJoin(topK(50)(reqHost)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Hostname",
+        "multi": true,
+        "name": "reqHost",
+        "options": [],
+        "query": "SELECT arrayJoin(topK(50)(reqHost)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_reqMethod",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "SELECT arrayJoin(topK(50)(reqMethod)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Method",
+        "multi": true,
+        "name": "reqMethod",
+        "options": [],
+        "query": "SELECT arrayJoin(topK(50)(reqMethod)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_UA",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "User Agent",
+        "name": "UA",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_rspContentType",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "SELECT arrayJoin(topK(50)(rspContentType)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Content Type",
+        "multi": true,
+        "name": "rspContentType",
+        "options": [],
+        "query": "SELECT arrayJoin(topK(50)(rspContentType)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_errorCode",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "SELECT arrayJoin(topK(50)(errorCode)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Error Code",
+        "multi": true,
+        "name": "errorCode",
+        "options": [],
+        "query": "SELECT arrayJoin(topK(50)(errorCode)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "hide": 0,
+        "includeAll": true,
+        "label": "Edge Response Time Percentile",
+        "multi": false,
+        "name": "edge_response_time_percentile",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "0.5",
+            "value": "0.5"
+          },
+          {
+            "selected": false,
+            "text": "0.75",
+            "value": "0.75"
+          },
+          {
+            "selected": false,
+            "text": "0.90",
+            "value": "0.90"
+          },
+          {
+            "selected": false,
+            "text": "0.95",
+            "value": "0.95"
+          },
+          {
+            "selected": false,
+            "text": "0.99",
+            "value": "0.99"
+          }
+        ],
+        "query": "0.5 , 0.75 , 0.90 , 0.95, 0.99",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_reqPath",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "Path",
+        "name": "reqPath",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_cliIP",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "Client IP",
+        "name": "cliIP",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_country",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "SELECT arrayJoin(topK(50)(country)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Country",
+        "multi": true,
+        "name": "country",
+        "options": [],
+        "query": "SELECT arrayJoin(topK(50)(country)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "include",
+          "value": "IN"
+        },
+        "description": "",
+        "hide": 1,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "AND_cp",
+        "options": [
+          {
+            "selected": true,
+            "text": "include",
+            "value": "IN"
+          },
+          {
+            "selected": false,
+            "text": "exclude",
+            "value": "NOT IN"
+          }
+        ],
+        "query": "include : IN, exclude : NOT IN",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "SELECT arrayJoin(topK(50)(cp)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "CPCode",
+        "multi": true,
+        "name": "cp",
+        "options": [],
+        "query": "SELECT arrayJoin(topK(50)(cp)) FROM ${table} WHERE $__timeFilter(reqTimeSec)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "$__conditionalAll(SELECT quantile(${edge_response_time_percentile})(transferTimeMSec) FROM ${table} WHERE $__timeFilter(reqTimeSec),$edge_response_time_percentile)",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "transferTimeMSec_percentile",
+        "options": [],
+        "query": "$__conditionalAll(SELECT quantile(${edge_response_time_percentile})(transferTimeMSec) FROM ${table} WHERE $__timeFilter(reqTimeSec),$edge_response_time_percentile)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "SELECT name\nFROM system.columns\nWHERE database = splitByChar('.', '${table}')[1]\nAND table = splitByChar('.', '${table}')[2]\nAND type IN ('Nullable(UInt8)', 'Nullable(UInt16)', 'Nullable(UInt32)', 'Nullable(UInt64)', 'Nullable(Int8)', 'Nullable(Int16)', 'Nullable(Int32)', 'Nullable(Int64)', 'UInt8', 'UInt16', 'UInt32', 'UInt64', 'Int8', 'Int16', 'Int32', 'Int64', 'Float', 'Nullable(Float)')",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Filter on Metric",
+        "multi": false,
+        "name": "metric_name",
+        "options": [],
+        "query": "SELECT name\nFROM system.columns\nWHERE database = splitByChar('.', '${table}')[1]\nAND table = splitByChar('.', '${table}')[2]\nAND type IN ('Nullable(UInt8)', 'Nullable(UInt16)', 'Nullable(UInt32)', 'Nullable(UInt64)', 'Nullable(Int8)', 'Nullable(Int16)', 'Nullable(Int32)', 'Nullable(Int64)', 'UInt8', 'UInt16', 'UInt32', 'UInt64', 'Int8', 'Int16', 'Int32', 'Int64', 'Float', 'Nullable(Float)')",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": "",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "hide": 1,
+        "includeAll": true,
+        "label": "",
+        "multi": false,
+        "name": "metric_filter",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "<",
+            "value": "<"
+          },
+          {
+            "selected": false,
+            "text": ">",
+            "value": ">"
+          },
+          {
+            "selected": false,
+            "text": "<=",
+            "value": "<="
+          },
+          {
+            "selected": false,
+            "text": ">=",
+            "value": ">="
+          },
+          {
+            "selected": false,
+            "text": "=",
+            "value": "="
+          }
+        ],
+        "query": "<,>, <=, >=,=",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "hide": 1,
+        "name": "metric_value",
+        "options": [
+          {
+            "selected": true,
+            "text": "0",
+            "value": "0"
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "table",
+        "options": [],
+        "query": "SELECT CONCAT((SELECT name FROM system.databases),'.', 'logs')",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "SELECT concat(project,'.`',table,'#.catalog`')\nFROM (SELECT splitByChar('.','${table}')[1] as project, splitByChar('.','${table}')[2] as table)",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "catalog",
+        "options": [],
+        "query": "SELECT concat(project,'.`',table,'#.catalog`')\nFROM (SELECT splitByChar('.','${table}')[1] as project, splitByChar('.','${table}')[2] as table)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${}"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "query0",
+        "options": [],
+        "query": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now-1m"
+  },
+  "timepicker": {
+    "hidden": false,
+    "nowDelay": "1m",
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "Akamai Compressed Objects Traffic & Uncompressed Objects Traffic",
+  "uid": "fdzgul0ll0av4d",
+  "version": 2,
+  "weekStart": ""
+}
